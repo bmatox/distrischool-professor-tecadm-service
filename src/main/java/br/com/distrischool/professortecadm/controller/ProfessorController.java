@@ -3,6 +3,7 @@ package br.com.distrischool.professortecadm.controller;
 import br.com.distrischool.professortecadm.dto.*;
 import br.com.distrischool.professortecadm.service.ProfessorService;
 import jakarta.validation.Valid;
+import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
@@ -27,7 +28,7 @@ public class ProfessorController {
     }
 
     @GetMapping
-    public ResponseEntity<Page<ProfessorResponse>> list(Pageable pageable) {
+    public ResponseEntity<Page<ProfessorResponse>> list(@ParameterObject Pageable pageable) {
         return ResponseEntity.ok(service.list(pageable));
     }
 
