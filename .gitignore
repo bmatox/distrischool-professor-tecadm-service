@@ -15,7 +15,7 @@ buildNumber.properties
 # ===================================================================
 *.env
 application-*.properties
-!application.properties # Garante que o application.properties principal NUNCA seja ignorado
+!application.properties
 
 # ===================================================================
 # Arquivos de IDE
