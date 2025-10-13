@@ -1,37 +1,61 @@
-HELP.md
+# ===================================================================
+# Arquivos de Log e Build do Maven
+# ===================================================================
 target/
-.mvn/wrapper/maven-wrapper.jar
-!**/src/main/**/target/
-!**/src/test/**/target/
+pom.xml.tag
+pom.xml.releaseBackup
+pom.xml.versionsBackup
+pom.xml.next
+release.properties
+dependency-reduced-pom.xml
+buildNumber.properties
 
-### STS ###
-.apt_generated
-.classpath
-.factorypath
-.project
-.settings
-.springBeans
-.sts4-cache
+# ===================================================================
+# Configurações de Ambiente e Arquivos Sensíveis
+# ===================================================================
+*.env
+application-*.properties
+!application.properties # Garante que o application.properties principal NUNCA seja ignorado
 
-### IntelliJ IDEA ###
-.idea
-*.iws
+# ===================================================================
+# Arquivos de IDE
+# ===================================================================
+
+# IntelliJ IDEA
+.idea/
 *.iml
+*.iws
 *.ipr
 
-### NetBeans ###
+# Visual Studio Code
+.vscode/
+
+# Eclipse / STS
+.project
+.classpath
+.settings/
+.springBeans
+.apt_generated
+.factorypath
+.sts4-cache
+
+# NetBeans
 /nbproject/private/
 /nbbuild/
 /dist/
 /nbdist/
 /.nb-gradle/
-build/
-!**/src/main/**/build/
-!**/src/test/**/build/
 
-### VS Code ###
-.vscode/
+# ===================================================================
+# Arquivos do Sistema Operacional e Diversos
+# ===================================================================
+.DS_Store
+Thumbs.db
+*.log
+*.tmp
+*.temp
 
-# Ignorar arquivos de configuração de ambiente local
-application-dev.properties
-*.env
+# ===================================================================
+# Arquivos gerados pelo projeto (padrão)
+# ===================================================================
+HELP.md
