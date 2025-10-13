@@ -11,7 +11,7 @@ dependency-reduced-pom.xml
 buildNumber.properties
 
 # ===================================================================
-# Configurações de Ambiente e Arquivos Sensíveis
+# Configurações de Ambiente e Arquivos Sensíveis e que não devem ir ao git
 # ===================================================================
 *.env
 application-*.properties
