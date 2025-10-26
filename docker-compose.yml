@@ -43,6 +43,17 @@ services:
       - db
       - rabbitmq
 
+  gateway:
+    build: ./api-gateway
+    container_name: distrischool-api-gateway
+    ports:
+      - "8888:8888"
+    depends_on:
+      - app
+    environment:
+      SPRING_CLOUD_GATEWAY_ROUTES_0_URI: http://app:8080
+      SPRING_CLOUD_GATEWAY_ROUTES_1_URI: http://app:8080
+
 volumes:
   postgres-data:
   rabbitmq-data:
