@@ -1,4 +1,4 @@
-package br.com.distrischool.user_service.config;
+package br.com.distrischool.professortecadm.config;
 
 import org.springframework.amqp.core.ExchangeBuilder;
 import org.springframework.amqp.core.TopicExchange;

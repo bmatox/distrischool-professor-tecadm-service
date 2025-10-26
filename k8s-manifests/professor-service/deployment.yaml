@@ -1,0 +1,35 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: professor-tecadm-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: professor-tecadm
+  template:
+    metadata:
+      labels:
+        app: professor-tecadm
+    spec:
+      containers:
+        - name: professor-tecadm-service
+          image: distrischool-professor-tecadm-service:latest
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 8082
+          env:
+            - name: DB_URL
+              value: "jdbc:postgresql://postgres-service:5432/distrischool_db"
+            - name: DB_USERNAME
+              value: "postgres"
+            - name: DB_PASSWORD
+              value: "postgres"
+            - name: RABBITMQ_HOST
+              value: "rabbitmq-service"
+            - name: RABBITMQ_PORT
+              value: "5672"
+            - name: RABBITMQ_USERNAME
+              value: "guest"
+            - name: RABBITMQ_PASSWORD
+              value: "guest"

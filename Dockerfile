@@ -1,9 +1,9 @@
 # =============================================================
 # ETAPA 1: Build da Aplicação com Maven
-# Usando uma imagem com Maven e JDK 21 para compilar o projeto.
+# Usando uma imagem com Maven e JDK 17 para compilar o projeto.
 # O "AS build" cria um apelido para esta etapa.
 # =============================================================
-FROM maven:3.9-eclipse-temurin-21 AS build
+FROM maven:3.9-eclipse-temurin-17 AS build
 
 WORKDIR /app
 
@@ -20,9 +20,9 @@ RUN mvn clean package -DskipTests
 
 # =============================================================
 # ETAPA 2: Imagem Final de Execução
-# Usando uma imagem "slim" do OpenJDK 21, que é otimizada e leve.
+# Usando uma imagem "slim" do OpenJDK 17, que é otimizada e leve.
 # =============================================================
-FROM openjdk:21-slim
+FROM openjdk:17-slim
 
 # Metadados da imagem
 LABEL authors="Bruno Matos"

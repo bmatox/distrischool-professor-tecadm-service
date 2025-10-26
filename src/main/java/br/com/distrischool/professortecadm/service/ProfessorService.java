@@ -2,6 +2,8 @@ package br.com.distrischool.professortecadm.service;
 
 import br.com.distrischool.professortecadm.dto.*;
 import br.com.distrischool.professortecadm.exception.*;
+import br.com.distrischool.professortecadm.messaging.ProfessorEventPublisher;
+import br.com.distrischool.professortecadm.messaging.dto.ProfessorEventDTO;
 import br.com.distrischool.professortecadm.model.Professor;
 import br.com.distrischool.professortecadm.repository.ProfessorRepository;
 import org.springframework.data.domain.Page;
@@ -13,9 +15,11 @@ import org.springframework.transaction.annotation.Transactional;
 public class ProfessorService {
 
     private final ProfessorRepository professorRepository;
+    private final ProfessorEventPublisher eventPublisher;
 
-    public ProfessorService(ProfessorRepository professorRepository) {
+    public ProfessorService(ProfessorRepository professorRepository, ProfessorEventPublisher eventPublisher) {
         this.professorRepository = professorRepository;
+        this.eventPublisher = eventPublisher;
     }
 
     @Transactional
@@ -28,7 +32,21 @@ public class ProfessorService {
         professor.setEmail(request.email());
         professor.setEspecialidade(request.especialidade());
         professor.setDataContratacao(request.dataContratacao());
-        return toResponse(professorRepository.save(professor));
+        Professor saved = professorRepository.save(professor);
+        
+        // Publish professor.created event
+        eventPublisher.publish("professor.created",
+                ProfessorEventDTO.builder()
+                        .id(saved.getId())
+                        .nome(saved.getNome())
+                        .email(saved.getEmail())
+                        .especialidade(saved.getEspecialidade())
+                        .dataContratacao(saved.getDataContratacao().toString())
+                        .type("CREATED")
+                        .build()
+        );
+        
+        return toResponse(saved);
     }
 
     @Transactional(readOnly = true)
@@ -55,7 +73,21 @@ public class ProfessorService {
         professor.setEmail(request.email());
         professor.setEspecialidade(request.especialidade());
         professor.setDataContratacao(request.dataContratacao());
-        return toResponse(professorRepository.save(professor));
+        Professor saved = professorRepository.save(professor);
+        
+        // Publish professor.updated event
+        eventPublisher.publish("professor.updated",
+                ProfessorEventDTO.builder()
+                        .id(saved.getId())
+                        .nome(saved.getNome())
+                        .email(saved.getEmail())
+                        .especialidade(saved.getEspecialidade())
+                        .dataContratacao(saved.getDataContratacao().toString())
+                        .type("UPDATED")
+                        .build()
+        );
+        
+        return toResponse(saved);
     }
 
     @Transactional
@@ -64,6 +96,14 @@ public class ProfessorService {
             throw new ResourceNotFoundException("Professor não encontrado: id=" + id);
         }
         professorRepository.deleteById(id);
+        
+        // Publish professor.deleted event
+        eventPublisher.publish("professor.deleted",
+                ProfessorEventDTO.builder()
+                        .id(id)
+                        .type("DELETED")
+                        .build()
+        );
     }
 
     private ProfessorResponse toResponse(Professor professor) {
