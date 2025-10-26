@@ -3,7 +3,7 @@ server:
 
 spring:
   datasource:
-    url: ${DB_URL:jdbc:postgresql://localhost:5432/distrischool_users}
+    url: ${DB_URL:jdbc:postgresql://postgres-service:5432/distrischool_users}
     username: ${DB_USERNAME:postgres}
     password: ${DB_PASSWORD:postgres}
     driver-class-name: org.postgresql.Driver
@@ -18,10 +18,10 @@ spring:
     locations: classpath:db/migration
 
   rabbitmq:              
-    host: ${RABBIT_HOST:rabbitmq}
-    port: ${RABBIT_PORT:5672}
-    username: ${RABBIT_USERNAME:guest}
-    password: ${RABBIT_PASSWORD:guest}
+    host: ${RABBITMQ_HOST:rabbitmq-service}
+    port: ${RABBITMQ_PORT:5672}
+    username: ${RABBITMQ_USERNAME:guest}
+    password: ${RABBITMQ_PASSWORD:guest}
 
 management:
   endpoints:

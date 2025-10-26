@@ -9,13 +9,12 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class AlunoProducer {
-    private static final String EXCHANGE_NAME = RabbitMQConfig.EXCHANGE_ALUNO;
+    private static final String EXCHANGE_NAME = RabbitMQConfig.EXCHANGE;
 
     @Autowired
     private RabbitTemplate rabbitTemplate;
 
     public void sendMessage(Aluno aluno){
-        // Objeto a ser enviado (poderia ser um DTO específico)
         String routingKey = "aluno.created";
 
         try {
