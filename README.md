@@ -8,29 +8,30 @@ A plataforma é composta por múltiplos microserviços independentes:
 
 ### Microserviços de Backend
 
-1. **Professor-TecAdm Service** (porta 8082)
+1. **Professor-TecAdm Service** (porta interna 8082)
    - Gerenciamento de Professores e Técnicos Administrativos
    - CRUD completo com validações
    - Publicação de eventos no RabbitMQ
 
-2. **Aluno Service** (porta 8081)
+2. **Aluno Service** (porta interna 8081)
    - Gerenciamento de Alunos
    - CRUD completo com endereço
    - Integração com mensageria
 
-3. **User Service** (porta 8080)
+3. **User Service** (porta interna 8080)
    - Gerenciamento de Usuários do sistema
    - Autenticação e autorização
    - Controle de permissões
 
 ### Infraestrutura
 
-4. **API Gateway** (porta 8080)
+4. **API Gateway** (porta interna 8080, exposta via NodePort)
    - Roteamento centralizado para todos os serviços
    - Configuração de CORS
    - Ponto único de entrada para o frontend
+   - **Nota:** Roda em um pod separado do User Service
 
-5. **Frontend** (porta 80)
+5. **Frontend** (porta interna 80, exposta via NodePort)
    - Interface web em React/Vite
    - Visualização de professores
    - Comunicação com backend via API Gateway
