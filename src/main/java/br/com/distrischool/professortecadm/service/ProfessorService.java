@@ -1,6 +1,10 @@
 package br.com.distrischool.professortecadm.service;
 
 import br.com.distrischool.professortecadm.dto.*;
+import br.com.distrischool.professortecadm.event.ProfessorCreatedEvent;
+import br.com.distrischool.professortecadm.event.ProfessorDeletedEvent;
+import br.com.distrischool.professortecadm.event.ProfessorEventPublisher;
+import br.com.distrischool.professortecadm.event.ProfessorUpdatedEvent;
 import br.com.distrischool.professortecadm.exception.*;
 import br.com.distrischool.professortecadm.model.Professor;
 import br.com.distrischool.professortecadm.repository.ProfessorRepository;
@@ -9,13 +13,17 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
+
 @Service
 public class ProfessorService {
 
     private final ProfessorRepository professorRepository;
+    private final ProfessorEventPublisher eventPublisher;
 
-    public ProfessorService(ProfessorRepository professorRepository) {
+    public ProfessorService(ProfessorRepository professorRepository, ProfessorEventPublisher eventPublisher) {
         this.professorRepository = professorRepository;
+        this.eventPublisher = eventPublisher;
     }
 
     @Transactional
@@ -28,7 +36,19 @@ public class ProfessorService {
         professor.setEmail(request.email());
         professor.setEspecialidade(request.especialidade());
         professor.setDataContratacao(request.dataContratacao());
-        return toResponse(professorRepository.save(professor));
+        Professor saved = professorRepository.save(professor);
+        
+        // Publish event
+        eventPublisher.publishProfessorCreated(new ProfessorCreatedEvent(
+                saved.getId(),
+                saved.getNome(),
+                saved.getEmail(),
+                saved.getEspecialidade(),
+                saved.getDataContratacao(),
+                LocalDateTime.now()
+        ));
+        
+        return toResponse(saved);
     }
 
     @Transactional(readOnly = true)
@@ -55,7 +75,19 @@ public class ProfessorService {
         professor.setEmail(request.email());
         professor.setEspecialidade(request.especialidade());
         professor.setDataContratacao(request.dataContratacao());
-        return toResponse(professorRepository.save(professor));
+        Professor saved = professorRepository.save(professor);
+        
+        // Publish event
+        eventPublisher.publishProfessorUpdated(new ProfessorUpdatedEvent(
+                saved.getId(),
+                saved.getNome(),
+                saved.getEmail(),
+                saved.getEspecialidade(),
+                saved.getDataContratacao(),
+                LocalDateTime.now()
+        ));
+        
+        return toResponse(saved);
     }
 
     @Transactional
@@ -64,6 +96,12 @@ public class ProfessorService {
             throw new ResourceNotFoundException("Professor não encontrado: id=" + id);
         }
         professorRepository.deleteById(id);
+        
+        // Publish event
+        eventPublisher.publishProfessorDeleted(new ProfessorDeletedEvent(
+                id,
+                LocalDateTime.now()
+        ));
     }
 
     private ProfessorResponse toResponse(Professor professor) {
