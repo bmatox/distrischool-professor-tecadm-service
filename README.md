@@ -1,94 +1,356 @@
-# Serviço de Gestão de Professores e Técnicos (distrischool-professor-tecadm-service)
+# DistriSchool - Plataforma de Gestão Escolar Distribuída
 
-Este microsserviço é um componente central do projeto **DistriSchool**, uma plataforma de gestão escolar distribuída. Sua responsabilidade é gerenciar o ciclo de vida (CRUD) das entidades de Professores e Técnicos Administrativos.
+Este repositório contém a implementação completa da arquitetura de microsserviços do **DistriSchool**, incluindo:
+- ✅ Backend Service (CRUD de Professores e Técnicos)
+- ✅ API Gateway (Spring Cloud Gateway)
+- ✅ Frontend React (Interface de Usuário)
+- ✅ RabbitMQ Integration (Eventos Assíncronos)
+- ✅ PostgreSQL (Banco de Dados)
 
-O serviço é construído seguindo uma arquitetura de microserviços, containerizado com Docker e orquestrado com Kubernetes, visando escalabilidade e tolerância a falhas.
+## 🚀 Quick Start
 
-## Tecnologias Utilizadas
+### Pré-requisitos
+- Docker 20.10+
+- Docker Compose 2.0+
 
-* **Backend:** Java 21, Spring Boot, Spring Data JPA
-* **Banco de Dados:** PostgreSQL
-* **Gerenciamento de Build:** Maven
-* **Migrations de Banco:** Flyway
-* **DevOps:** Docker, Docker Compose, Kubernetes (Minikube para desenvolvimento)
-* **Documentação da API:** SpringDoc (Swagger UI)
-* **Utilitários:** Lombok
+### Iniciar o Ambiente Completo
 
-## Pré-requisitos
+```bash
+# 1. Clone o repositório
+git clone <URL_DO_REPOSITORIO>
+cd distrischool-professor-tecadm-service
 
-Antes de começar, garanta que você tenha as seguintes ferramentas instaladas:
-* JDK 17+
-* Docker e Docker Compose
-* Um cliente Git
-* Uma IDE de sua preferência (ex: IntelliJ IDEA)
-* Um cliente de API como o Postman (opcional)
+# 2. Configure o .env (já criado, mas você pode personalizá-lo)
+# As credenciais padrão são admin/admin
 
-## Como Executar (Ambiente de Desenvolvimento)
+# 3. Inicie todos os serviços
+docker compose up --build
+```
 
-A maneira mais simples de executar o ambiente completo (aplicação + banco de dados) é utilizando o Docker Compose.
+### Acessar os Serviços
 
-1.  **Clone o Repositório**
-    ```bash
-    git clone <URL_DO_SEU_REPOSITORIO>
-    cd distrischool-professor-tecadm-service
-    ```
+Após a inicialização (3-10 minutos na primeira vez):
 
-2.  **Configure as Variáveis de Ambiente**
-    Este projeto usa um arquivo `.env` para configurar as credenciais do banco de dados localmente.
-    * Crie uma cópia do arquivo `.env.example` e renomeie-a para `.env`.
-    * Preencha as variáveis no arquivo `.env` com suas credenciais locais, se necessário.
+| Serviço | URL | Credenciais |
+|---------|-----|-------------|
+| **Frontend** | http://localhost:3000 | - |
+| **API Gateway** | http://localhost:8888 | - |
+| **Backend API** | http://localhost:8080 | - |
+| **Swagger UI** | http://localhost:8080/swagger-ui.html | - |
+| **RabbitMQ Management** | http://localhost:15672 | admin/admin |
 
-3.  **Inicie os Contêineres**
-    Com o Docker Desktop em execução, execute o seguinte comando na raiz do projeto:
-    ```bash
-    docker-compose up --build
-    ```
-    * `--build`: Garante que a imagem Docker da sua aplicação seja reconstruída caso haja alguma alteração no código.
-    * O comando irá iniciar o contêiner do PostgreSQL e o contêiner da sua aplicação.
+### Parar o Ambiente
 
-4.  **Para Parar Tudo**
-    Quando terminar de trabalhar, pressione `Ctrl + C` no terminal onde o compose está rodando, ou execute o seguinte comando em outro terminal (na mesma pasta):
-    ```bash
-    docker-compose down
-    ```
+```bash
+docker compose down
 
-## Acessando os Serviços
+# Para remover volumes também (limpar dados):
+docker compose down -v
+```
 
-* **Aplicação:** A API estará disponível na porta `8080`.
-    * URL base: `http://localhost:8080`
+## 🏗️ Arquitetura
 
-* **Documentação Swagger UI:** A documentação interativa da API é gerada automaticamente e pode ser acessada em:
-    * `http://localhost:8080/swagger-ui.html`
+```
+┌─────────────┐
+│   Browser   │
+└──────┬──────┘
+       │ :3000
+┌──────▼──────┐
+│  Frontend   │ (React + Vite)
+│   (Nginx)   │
+└──────┬──────┘
+       │ :8888
+┌──────▼──────┐
+│ API Gateway │ (Spring Cloud Gateway)
+└──────┬──────┘
+       │ :8080
+┌──────▼────────────────┐         ┌──────────┐
+│  Backend Service      │────────→│ RabbitMQ │
+│ (Spring Boot + JPA)   │ Events  │ :5672    │
+└──────┬────────────────┘         └──────────┘
+       │ :5432
+┌──────▼──────┐
+│ PostgreSQL  │
+└─────────────┘
+```
 
-## Documentação da API
+## 📁 Estrutura do Projeto
 
-O serviço expõe endpoints REST para gerenciar Professores e Técnicos Administrativos.
+```
+distrischool-professor-tecadm-service/
+├── api-gateway/              # API Gateway (Spring Cloud Gateway)
+│   ├── src/
+│   ├── Dockerfile
+│   └── pom.xml
+├── frontend/                 # Frontend React (Vite)
+│   ├── src/
+│   │   └── components/
+│   │       └── ProfessorList.jsx
+│   ├── Dockerfile
+│   ├── nginx.conf
+│   └── package.json
+├── src/                      # Backend Service (Spring Boot)
+│   ├── main/java/
+│   │   └── br/com/distrischool/professortecadm/
+│   │       ├── config/       # RabbitMQ Config
+│   │       ├── controller/   # REST Controllers
+│   │       ├── event/        # Event Publishers
+│   │       ├── model/        # JPA Entities
+│   │       ├── repository/   # Spring Data
+│   │       └── service/      # Business Logic
+│   └── resources/
+│       ├── db/migration/     # Flyway Migrations
+│       └── application.properties
+├── docker-compose.yml        # Orchestração completa
+├── TESTING_INTEGRATION.md    # Guia de testes detalhado
+├── ARCHITECTURE.md           # Documentação da arquitetura
+├── ARCHITECTURE_DIAGRAM.md   # Diagramas visuais
+└── IMPLEMENTATION_SUMMARY.md # Checklist de implementação
+```
 
-### Professores (`/api/v1/professores`)
+## 🎯 Funcionalidades Implementadas
+
+### Backend Service (Port 8080)
+- ✅ CRUD completo de Professores
+- ✅ CRUD completo de Técnicos Administrativos
+- ✅ Validação de dados
+- ✅ Paginação de resultados
+- ✅ Documentação Swagger
+- ✅ Migrations automáticas (Flyway)
+- ✅ Publicação de eventos RabbitMQ
+
+### API Gateway (Port 8888)
+- ✅ Roteamento de requisições
+- ✅ CORS configurado
+- ✅ Retry logic para resiliência
+- ✅ Endpoint único de entrada
+
+### Frontend (Port 3000)
+- ✅ Lista de professores
+- ✅ Estados de loading e erro
+- ✅ Design responsivo
+- ✅ Comunicação via API Gateway
+
+### RabbitMQ Integration
+- ✅ Exchange: `distrischool.professor.exchange`
+- ✅ Filas: created, updated, deleted
+- ✅ Eventos publicados automaticamente
+- ✅ Pronto para consumidores futuros
+
+## 🧪 Testar a Integração
+
+### 1. Verificar Frontend
+```bash
+# Abra no navegador
+http://localhost:3000
+
+# Você verá 5 professores de exemplo
+```
+
+### 2. Criar um Professor via API
+```bash
+curl -X POST http://localhost:8888/api/v1/professores \
+  -H "Content-Type: application/json" \
+  -d '{
+    "nome": "Dr. João Silva",
+    "email": "joao.silva@distrischool.com",
+    "especialidade": "Matemática",
+    "dataContratacao": "2025-01-15"
+  }'
+```
+
+### 3. Verificar Evento no RabbitMQ
+```bash
+# Acesse: http://localhost:15672
+# Login: admin/admin
+# Vá para "Queues and Streams"
+# Verifique que professor.created.queue recebeu 1 mensagem
+```
+
+### 4. Atualizar Frontend
+```bash
+# Recarregue http://localhost:3000
+# O novo professor aparecerá na lista
+```
+
+## 📚 Documentação Completa
+
+- **[TESTING_INTEGRATION.md](TESTING_INTEGRATION.md)** - Guia passo a passo de testes
+- **[ARCHITECTURE.md](ARCHITECTURE.md)** - Visão geral da arquitetura
+- **[ARCHITECTURE_DIAGRAM.md](ARCHITECTURE_DIAGRAM.md)** - Diagramas detalhados
+- **[IMPLEMENTATION_SUMMARY.md](IMPLEMENTATION_SUMMARY.md)** - Checklist completo
+
+## 🛠️ Tecnologias Utilizadas
+
+### Backend
+- **Java 17** - Linguagem de programação
+- **Spring Boot 3.2.5** - Framework principal
+- **Spring Data JPA** - Persistência de dados
+- **Spring AMQP** - Integração RabbitMQ
+- **Hibernate** - ORM
+- **Flyway** - Migrations de banco
+- **PostgreSQL Driver** - Conector de banco
+- **Lombok** - Redução de boilerplate
+- **SpringDoc OpenAPI** - Documentação Swagger
+
+### API Gateway
+- **Spring Cloud Gateway 2023.0.1** - Gateway reativo
+- **Spring Boot 3.2.5** - Framework base
+- **Netty** - Servidor web reativo
+
+### Frontend
+- **React 18** - Biblioteca UI
+- **Vite 5** - Build tool e dev server
+- **JavaScript ES6+** - Linguagem
+- **Nginx** - Web server (produção)
+
+### Infraestrutura
+- **PostgreSQL 15** - Banco de dados
+- **RabbitMQ 3** - Message broker
+- **Docker** - Containerização
+- **Docker Compose** - Orquestração
+
+### Build & Development
+- **Maven 3.9** - Build do backend e gateway
+- **npm 10** - Gerenciador de pacotes frontend
+- **Git** - Controle de versão
+
+## 📊 Endpoints da API
+
+### Professores
 
 | Método | Endpoint | Descrição |
-| :--- | :--- | :--- |
-| `POST` | `/` | Cria um novo professor. |
-| `GET` | `/` | Lista todos os professores de forma paginada. |
-| `GET` | `/{id}` | Busca um professor específico pelo seu ID. |
-| `PUT` | `/{id}` | Atualiza os dados de um professor existente. |
-| `DELETE` | `/{id}` | Remove um professor do sistema. |
+|--------|----------|-----------|
+| `POST` | `/api/v1/professores` | Cria um novo professor |
+| `GET` | `/api/v1/professores` | Lista todos os professores (paginado) |
+| `GET` | `/api/v1/professores/{id}` | Busca um professor específico |
+| `PUT` | `/api/v1/professores/{id}` | Atualiza dados de um professor |
+| `DELETE` | `/api/v1/professores/{id}` | Remove um professor |
 
-### Técnicos Administrativos (`/api/v1/tecnicos`)
-
-*(Endpoints a serem implementados seguindo o mesmo padrão dos professores)*
+### Técnicos Administrativos
 
 | Método | Endpoint | Descrição |
-| :--- | :--- | :--- |
-| `POST` | `/` | Cria um novo técnico administrativo. |
-| `GET` | `/` | Lista todos os técnicos administrativos de forma paginada. |
-| `GET` | `/{id}` | Busca um técnico específico pelo seu ID. |
-| `PUT` | `/{id}` | Atualiza os dados de um técnico existente. |
-| `DELETE` | `/{id}` | Remove um técnico do sistema. |
+|--------|----------|-----------|
+| `POST` | `/api/v1/tecnicos` | Cria um novo técnico |
+| `GET` | `/api/v1/tecnicos` | Lista todos os técnicos (paginado) |
+| `GET` | `/api/v1/tecnicos/{id}` | Busca um técnico específico |
+| `PUT` | `/api/v1/tecnicos/{id}` | Atualiza dados de um técnico |
+| `DELETE` | `/api/v1/tecnicos/{id}` | Remove um técnico |
 
-## Estrutura de Banco de Dados
+**Nota:** Acesse via API Gateway usando `http://localhost:8888` para melhor prática.
 
-O schema do banco de dados é gerenciado automaticamente pelo **Flyway**. Os scripts de migração SQL estão localizados em:
-`src/main/resources/db/migration`
+## 🔄 Eventos RabbitMQ
 
-Qualquer alteração na estrutura das tabelas deve ser feita criando um novo arquivo de migração (ex: `V2__Descricao_da_mudanca.sql`).
+O sistema publica eventos assíncronos sempre que há operações CRUD:
+
+| Evento | Fila | Quando é Disparado |
+|--------|------|-------------------|
+| `ProfessorCreatedEvent` | `professor.created.queue` | Ao criar um professor |
+| `ProfessorUpdatedEvent` | `professor.updated.queue` | Ao atualizar um professor |
+| `ProfessorDeletedEvent` | `professor.deleted.queue` | Ao deletar um professor |
+
+Estes eventos podem ser consumidos por outros microsserviços.
+
+## 🔧 Desenvolvimento Local
+
+### Compilar Backend
+```bash
+./mvnw clean install
+```
+
+### Compilar API Gateway
+```bash
+cd api-gateway
+./mvnw clean install
+```
+
+### Executar Frontend em Dev Mode
+```bash
+cd frontend
+npm install
+npm run dev
+# Acesse http://localhost:5173
+```
+
+## 🐛 Troubleshooting
+
+### Frontend não carrega dados
+- Verifique se o Gateway está rodando: `docker ps | grep gateway`
+- Verifique console do navegador (F12) para erros
+- Confirme que o Gateway está em http://localhost:8888
+
+### Gateway não roteia
+- Verifique logs: `docker logs distrischool-api-gateway`
+- Teste conexão com backend: `curl http://localhost:8888/actuator/health`
+
+### RabbitMQ não recebe eventos
+- Verifique se está rodando: `docker ps | grep rabbitmq`
+- Acesse Management UI: http://localhost:15672
+- Verifique logs do backend: `docker logs professor-tecadm-service`
+
+### Erro ao iniciar containers
+```bash
+# Limpe tudo e tente novamente
+docker compose down -v
+docker compose build --no-cache
+docker compose up
+```
+
+## 📦 Estrutura de Banco de Dados
+
+### Tabela: professores
+| Campo | Tipo | Restrições |
+|-------|------|-----------|
+| id | BIGINT | PRIMARY KEY, AUTO_INCREMENT |
+| nome | VARCHAR(255) | NOT NULL |
+| email | VARCHAR(255) | NOT NULL, UNIQUE |
+| especialidade | VARCHAR(255) | - |
+| data_contratacao | DATE | NOT NULL |
+
+### Tabela: tecnicos_administrativos  
+| Campo | Tipo | Restrições |
+|-------|------|-----------|
+| id | BIGINT | PRIMARY KEY, AUTO_INCREMENT |
+| nome | VARCHAR(255) | NOT NULL |
+| email | VARCHAR(255) | NOT NULL, UNIQUE |
+| setor | VARCHAR(255) | - |
+| data_contratacao | DATE | NOT NULL |
+
+## 🚀 Próximos Passos
+
+- [ ] Implementar autenticação JWT
+- [ ] Adicionar Circuit Breaker no Gateway
+- [ ] Implementar rate limiting
+- [ ] Criar consumidores de eventos RabbitMQ
+- [ ] Adicionar testes de integração automatizados
+- [ ] Implementar monitoramento (Prometheus/Grafana)
+- [ ] Adicionar logging distribuído (ELK Stack)
+- [ ] Deploy em Kubernetes
+
+## 📄 Licença
+
+Este projeto faz parte do DistriSchool e é usado para fins educacionais.
+
+## 👥 Autores
+
+- Bruno Matos
+- Equipe DistriSchool
+
+## 🤝 Contribuindo
+
+1. Fork o projeto
+2. Crie uma branch para sua feature (`git checkout -b feature/AmazingFeature`)
+3. Commit suas mudanças (`git commit -m 'Add some AmazingFeature'`)
+4. Push para a branch (`git push origin feature/AmazingFeature`)
+5. Abra um Pull Request
+
+## 📞 Suporte
+
+Para problemas ou dúvidas:
+- Consulte a [documentação completa](TESTING_INTEGRATION.md)
+- Verifique os logs dos serviços
+- Abra uma issue no GitHub
+
+---
+
+**DistriSchool - Plataforma de Gestão Escolar Distribuída v1.0** 🎓
