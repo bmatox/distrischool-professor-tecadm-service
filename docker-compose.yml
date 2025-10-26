@@ -54,6 +54,14 @@ services:
       SPRING_CLOUD_GATEWAY_ROUTES_0_URI: http://app:8080
       SPRING_CLOUD_GATEWAY_ROUTES_1_URI: http://app:8080
 
+  frontend:
+    build: ./frontend
+    container_name: distrischool-frontend
+    ports:
+      - "3000:80"
+    depends_on:
+      - gateway
+
 volumes:
   postgres-data:
   rabbitmq-data:

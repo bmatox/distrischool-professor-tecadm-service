@@ -1,0 +1,118 @@
+.professor-list-container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+h1 {
+  color: #2c3e50;
+  text-align: center;
+  margin-bottom: 10px;
+}
+
+.subtitle {
+  text-align: center;
+  color: #7f8c8d;
+  margin-bottom: 30px;
+  font-size: 14px;
+}
+
+.professor-list {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 30px 0;
+}
+
+.professor-item {
+  background: white;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  padding: 20px;
+  margin-bottom: 15px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.professor-item:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.professor-info h3 {
+  margin: 0 0 10px 0;
+  color: #34495e;
+  font-size: 20px;
+}
+
+.professor-info p {
+  margin: 5px 0;
+  color: #555;
+  font-size: 14px;
+}
+
+.email {
+  color: #3498db;
+  font-weight: 500;
+}
+
+.especialidade {
+  color: #27ae60;
+}
+
+.data {
+  color: #95a5a6;
+  font-size: 13px;
+}
+
+.loading {
+  text-align: center;
+  padding: 50px;
+  font-size: 18px;
+  color: #7f8c8d;
+}
+
+.error {
+  text-align: center;
+  padding: 50px;
+  color: #e74c3c;
+}
+
+.error button {
+  margin-top: 20px;
+  padding: 10px 20px;
+  background-color: #3498db;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.error button:hover {
+  background-color: #2980b9;
+}
+
+.empty-state {
+  text-align: center;
+  padding: 50px;
+  color: #95a5a6;
+  font-style: italic;
+}
+
+.info-box {
+  background: #ecf0f1;
+  border-radius: 8px;
+  padding: 15px;
+  margin-top: 30px;
+  text-align: center;
+}
+
+.info-box p {
+  margin: 8px 0;
+  color: #34495e;
+  font-size: 14px;
+}
+
+.info-box strong {
+  color: #2c3e50;
+}
