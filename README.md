@@ -92,7 +92,20 @@ cd distrischool-professor-tecadm-service
 
 Siga o guia completo em [TESTING_MINIKUBE.md](./TESTING_MINIKUBE.md) para instruções detalhadas de deploy.
 
-**Resumo rápido:**
+#### Opção 1: Script Automatizado (Recomendado)
+
+**Windows (PowerShell):**
+```powershell
+.\setup-dev-env.ps1
+```
+
+**Linux/Mac (Bash):**
+```bash
+./build-all.sh
+./deploy-all.sh
+```
+
+#### Opção 2: Setup Manual
 
 ```bash
 # Inicie o Minikube
