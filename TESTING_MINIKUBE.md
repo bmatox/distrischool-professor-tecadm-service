@@ -2,6 +2,29 @@
 
 Este documento fornece instruções passo a passo para fazer o deploy completo da plataforma DistriSchool no Minikube.
 
+## Setup Automatizado (Recomendado)
+
+### Para usuários Windows:
+Execute o script PowerShell automatizado que realiza todo o processo:
+```powershell
+.\setup-dev-env.ps1
+```
+
+Este script automatiza todas as etapas descritas neste guia. Veja a seção [11. Automatização](#11-automatização-recomendado) para mais detalhes.
+
+### Para usuários Linux/Mac:
+Execute os scripts bash existentes:
+```bash
+./build-all.sh
+./deploy-all.sh
+```
+
+---
+
+## Setup Manual (Passo a Passo)
+
+Se preferir executar o setup manualmente ou em caso de problemas com o script automatizado, siga as instruções abaixo.
+
 ## Pré-requisitos
 
 - Docker instalado e funcionando
@@ -9,6 +32,7 @@ Este documento fornece instruções passo a passo para fazer o deploy completo d
 - kubectl instalado
 - Git
 - Pelo menos 8GB de RAM disponível
+- Para Windows: PowerShell 5.1 ou superior
 
 ## 1. Iniciar o Minikube
 
@@ -454,11 +478,36 @@ minikube stop
 minikube delete
 ```
 
-## 11. Automatização (Opcional)
+## 11. Automatização (Recomendado)
 
-### 11.1. Script para Build de Todas as Imagens
+### 11.1. Script Automatizado Completo (Windows PowerShell)
 
-Crie um arquivo `build-all.sh`:
+Para usuários Windows, existe um script PowerShell que automatiza todo o processo de setup:
+
+**`setup-dev-env.ps1`** - Script completo que:
+- Verifica pré-requisitos (Docker, Minikube, kubectl)
+- Inicia o Minikube se não estiver rodando
+- Configura o ambiente Docker para usar o daemon do Minikube
+- Constrói todas as imagens Docker
+- Aplica todos os manifestos Kubernetes na ordem correta
+- Exibe instruções finais de acesso
+
+**Execução:**
+```powershell
+# Execute o script no diretório raiz do projeto
+.\setup-dev-env.ps1
+```
+
+**Nota:** O script pode solicitar permissões de execução. Para habilitar a execução de scripts PowerShell:
+```powershell
+Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
+```
+
+### 11.2. Scripts para Linux/Mac
+
+#### 11.2.1. Script para Build de Todas as Imagens
+
+O arquivo `build-all.sh` constrói todas as imagens Docker:
 
 ```bash
 #!/bin/bash
@@ -500,9 +549,9 @@ chmod +x build-all.sh
 ./build-all.sh
 ```
 
-### 11.2. Script para Deploy Completo
+#### 11.2.2. Script para Deploy Completo
 
-Crie um arquivo `deploy-all.sh`:
+O arquivo `deploy-all.sh` faz o deploy de todos os serviços:
 
 ```bash
 #!/bin/bash
