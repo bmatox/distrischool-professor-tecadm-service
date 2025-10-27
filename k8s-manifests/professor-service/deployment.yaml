@@ -17,19 +17,29 @@ spec:
           image: distrischool-professor-tecadm-service:latest
           imagePullPolicy: IfNotPresent
           ports:
-            - containerPort: 8082
+            - containerPort: 8082 # Mantém a porta específica se necessário
           env:
-            - name: SPRING_DATASOURCE_URL # Padrão Spring Boot
-              value: "jdbc:postgresql://postgres-service:5432/professortecadm_db" # Valor do seu .env/application-dev
-            - name: SPRING_DATASOURCE_USERNAME # Padrão Spring Boot
-              value: "admin" # Valor do seu .env/application-dev
-            - name: SPRING_DATASOURCE_PASSWORD # Padrão Spring Boot
-              value: "admin" # Valor do seu .env/application-dev
-            - name: SPRING_RABBITMQ_HOST # Padrão Spring Boot
+            # --- Configurações de Banco de Dados ---
+            - name: SPRING_DATASOURCE_URL
+              value: "jdbc:postgresql://postgres-service:5432/distrischool_db" # <<< Banco unificado
+            - name: SPRING_DATASOURCE_USERNAME
+              value: "postgres" # <<< Credencial do .env
+            - name: SPRING_DATASOURCE_PASSWORD
+              value: "postgres" # <<< Credencial do .env
+            # --- Configurações de Schema ---
+            - name: SPRING_FLYWAY_SCHEMAS
+              value: "professor_schema" # <<< Schema específico
+            - name: SPRING_FLYWAY_CREATE_SCHEMAS
+              value: "true"
+            - name: SPRING_JPA_PROPERTIES_HIBERNATE_DEFAULT_SCHEMA
+              value: "professor_schema" # <<< Schema específico
+
+            # --- Configurações do RabbitMQ ---
+            - name: SPRING_RABBITMQ_HOST
               value: "rabbitmq-service"
-            - name: SPRING_RABBITMQ_PORT # Padrão Spring Boot
+            - name: SPRING_RABBITMQ_PORT
               value: "5672"
-            - name: SPRING_RABBITMQ_USERNAME # Padrão Spring Boot
-              value: "admin" # Valor do seu .env
-            - name: SPRING_RABBITMQ_PASSWORD # Padrão Spring Boot
-              value: "admin" # Valor do seu .env
+            - name: SPRING_RABBITMQ_USERNAME
+              value: "admin" # <<< Credencial do .env
+            - name: SPRING_RABBITMQ_PASSWORD
+              value: "admin" # <<< Credencial do .env
