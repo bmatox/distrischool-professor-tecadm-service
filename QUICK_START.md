@@ -8,7 +8,7 @@
 
 ```powershell
 # 1. Clone o repositório
-git clone <URL_DO_REPOSITORIO>
+git clone https://github.com/bmatox/distrischool-professor-tecadm-service.git
 cd distrischool-professor-tecadm-service
 
 # 2. Execute o deploy completo (tudo em um comando!)
@@ -97,10 +97,12 @@ kubectl get services -A
 kubectl get pods
 
 # Ver logs de um pod específico
-kubectl logs <nome-do-pod>
+kubectl logs <pod-name>
+# Exemplo: kubectl logs professor-tecadm-service-7d8f9b5c6d-xyz12
 
 # Ver logs em tempo real
-kubectl logs -f <nome-do-pod>
+kubectl logs -f <pod-name>
+# Exemplo: kubectl logs -f professor-tecadm-service-7d8f9b5c6d-xyz12
 ```
 
 ### Acessar Serviços
@@ -151,8 +153,9 @@ Add-Content -Path C:\Windows\System32\drivers\etc\hosts -Value "$minikubeIp dist
 ```powershell
 # Veja o que está acontecendo
 kubectl get pods -A
-kubectl describe pod <nome-do-pod>
-kubectl logs <nome-do-pod>
+kubectl describe pod <pod-name>
+kubectl logs <pod-name>
+# Exemplo: kubectl logs professor-tecadm-service-7d8f9b5c6d-xyz12
 
 # Se necessário, reinicie o deploy
 .\clean-setup.ps1
@@ -207,11 +210,11 @@ Para informações detalhadas, consulte:
 
 ---
 
-## ✨ Novidade!
+## ✨ Benefícios
 
-Estes scripts são **novos** e foram criados para simplificar o gerenciamento do ambiente DistriSchool. Eles substituem o processo manual anterior e tornam o desenvolvimento muito mais fácil!
+Estes scripts foram criados para simplificar o gerenciamento do ambiente DistriSchool. Eles substituem processos manuais complexos e tornam o desenvolvimento muito mais eficiente!
 
-**Antes:** Vários comandos manuais, configuração complexa
-**Agora:** Um comando para deploy completo, um comando para limpar
+**Antes:** Vários comandos manuais, configuração complexa e propensa a erros
+**Agora:** Um comando para deploy completo, um comando para limpar - simples e confiável
 
 Aproveite! 🚀
