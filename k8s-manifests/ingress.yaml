@@ -13,7 +13,10 @@ spec:
     - host: distrischool.local
       http:
         paths:
-          # API Gateway routes - preserve /api prefix
+          # API Gateway routes - IMPORTANT: preserve /api prefix
+          # The API Gateway (Spring Cloud Gateway) routes are configured to expect /api in the path
+          # (e.g., /api/v1/professores/**). Do NOT use rewrite-target here as it would strip
+          # the /api prefix and cause 404 errors. See API_GATEWAY_FIX.md for details.
           - path: /api
             pathType: Prefix
             backend:
