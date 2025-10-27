@@ -63,4 +63,3 @@ Write-Host "  Frontend: http://distrischool.local" -ForegroundColor White
 Write-Host "  API:      http://distrischool.local/api" -ForegroundColor White
 Write-Host ""
 Write-Host "📝 Para testar, execute: curl http://distrischool.local/api/v1/professores" -ForegroundColor Gray
-Write-Host ""
