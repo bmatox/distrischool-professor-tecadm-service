@@ -19,17 +19,17 @@ spec:
           ports:
             - containerPort: 8082
           env:
-            - name: DB_URL
-              value: "jdbc:postgresql://postgres-service:5432/distrischool_db"
-            - name: DB_USERNAME
-              value: "postgres"
-            - name: DB_PASSWORD
-              value: "postgres"
-            - name: RABBITMQ_HOST
+            - name: SPRING_DATASOURCE_URL # Padrão Spring Boot
+              value: "jdbc:postgresql://postgres-service:5432/professortecadm_db" # Valor do seu .env/application-dev
+            - name: SPRING_DATASOURCE_USERNAME # Padrão Spring Boot
+              value: "admin" # Valor do seu .env/application-dev
+            - name: SPRING_DATASOURCE_PASSWORD # Padrão Spring Boot
+              value: "admin" # Valor do seu .env/application-dev
+            - name: SPRING_RABBITMQ_HOST # Padrão Spring Boot
               value: "rabbitmq-service"
-            - name: RABBITMQ_PORT
+            - name: SPRING_RABBITMQ_PORT # Padrão Spring Boot
               value: "5672"
-            - name: RABBITMQ_USERNAME
-              value: "guest"
-            - name: RABBITMQ_PASSWORD
-              value: "guest"
+            - name: SPRING_RABBITMQ_USERNAME # Padrão Spring Boot
+              value: "admin" # Valor do seu .env
+            - name: SPRING_RABBITMQ_PASSWORD # Padrão Spring Boot
+              value: "admin" # Valor do seu .env

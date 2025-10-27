@@ -1,4 +1,4 @@
-# ====================================
+﻿# ====================================
 # DistriSchool - Setup Development Environment
 # PowerShell Script for Windows/Minikube
 # ====================================
