@@ -1,79 +1,111 @@
-# DistriSchool - Plataforma de Gestão Escolar Distribuída
+# 🎓 DistriSchool - Plataforma de Gestão Escolar Distribuída
 
-O **DistriSchool** é uma plataforma completa de gestão escolar baseada em arquitetura de microserviços, desenvolvida com Spring Boot, containerizada com Docker e orquestrada com Kubernetes.
+O **DistriSchool** é uma plataforma completa de gestão escolar baseada em **arquitetura de microserviços**, desenvolvida com Spring Boot, containerizada com Docker e orquestrada com Kubernetes. Este projeto demonstra as melhores práticas de desenvolvimento de sistemas distribuídos, incluindo comunicação síncrona e assíncrona, isolamento de serviços, escalabilidade horizontal e resiliência a falhas.
+
+## 📚 Documentação Completa
+
+Este projeto possui documentação extensiva para facilitar o entendimento e uso do sistema:
+
+- **[ARCHITECTURE.md](./ARCHITECTURE.md)** - 🏗️ Arquitetura completa do sistema
+  - O que é o DistriSchool e seu propósito
+  - Tecnologias utilizadas em detalhes
+  - Diagramas de arquitetura
+  - Padrões arquiteturais implementados
+  - Fluxo de dados e comunicação
+
+- **[DEPLOYMENT_GUIDE.md](./DEPLOYMENT_GUIDE.md)** - 🚀 Guia completo de deploy
+  - Explicação detalhada do script `full-deploy.ps1`
+  - O que acontece nos bastidores em cada etapa
+  - Configuração do Minikube, Docker e Kubernetes
+  - Build das imagens Docker
+  - Deploy de infraestrutura e microserviços
+  - Troubleshooting completo
+
+- **[MICROSERVICES_TESTING.md](./MICROSERVICES_TESTING.md)** - 🧪 Testes de microserviços
+  - Comandos para provar a independência dos serviços
+  - Testes de isolamento de banco de dados
+  - Verificação de comunicação assíncrona (RabbitMQ)
+  - Demonstração de escalabilidade horizontal
+  - Testes de resiliência a falhas
+  - Script completo de demonstração
+
+- **[API_TESTING_GUIDE.md](./API_TESTING_GUIDE.md)** - 🔌 Guia de testes de API
+  - Documentação de todos os endpoints
+  - Exemplos de requisições e respostas
+  - Comandos PowerShell, curl e Postman
+  - Testes de integração com frontend
+  - Scripts de teste automatizado
+
+- **[FOLDER_STRUCTURE.md](./FOLDER_STRUCTURE.md)** - 📁 Estrutura de pastas
+  - Organização completa do projeto
+  - Propósito de cada diretório
+  - Onde adicionar novos componentes
+  - Arquivos de configuração
+
+- **[POWERSHELL_SCRIPTS_GUIDE.md](./POWERSHELL_SCRIPTS_GUIDE.md)** - 🔧 Guia dos scripts
+  - Como usar `full-deploy.ps1`
+  - Como usar `clean-setup.ps1`
+  - Troubleshooting detalhado
+  - Comandos úteis
 
 ## 🏗️ Arquitetura
 
-A plataforma é composta por múltiplos microserviços independentes:
+A plataforma demonstra uma **arquitetura de microserviços completa e funcional**, com serviços independentes, comunicação síncrona e assíncrona, e infraestrutura distribuída.
 
-### Microserviços de Backend
+### Componentes Principais
 
-1. **Professor-TecAdm Service** (porta interna 8082)
-   - Gerenciamento de Professores e Técnicos Administrativos
-   - CRUD completo com validações
-   - Publicação de eventos no RabbitMQ
+| Componente | Tecnologia | Porta | Descrição |
+|------------|-----------|-------|-----------|
+| **Professor Service** | Spring Boot | 8082 | Gestão de professores e técnicos administrativos |
+| **Aluno Service** | Spring Boot | 8081 | Gestão de alunos com endereços |
+| **User Service** | Spring Boot | 8080 | Gestão de usuários e autenticação |
+| **API Gateway** | Spring Cloud Gateway | 8080 | Roteamento centralizado e CORS |
+| **Frontend** | React + Nginx | 80 | Interface web moderna (SPA) |
+| **PostgreSQL** | PostgreSQL 15 | 5432 | Banco de dados relacional |
+| **RabbitMQ** | RabbitMQ 3 | 5672/15672 | Message broker para eventos assíncronos |
+| **Ingress** | NGINX Ingress | 80/443 | Roteamento externo e Load Balancing |
 
-2. **Aluno Service** (porta interna 8081)
-   - Gerenciamento de Alunos
-   - CRUD completo com endereço
-   - Integração com mensageria
+### Características da Arquitetura
 
-3. **User Service** (porta interna 8080)
-   - Gerenciamento de Usuários do sistema
-   - Autenticação e autorização
-   - Controle de permissões
+✅ **Microserviços Independentes**: Cada serviço pode ser desenvolvido, deployado e escalado separadamente  
+✅ **Database per Service**: Cada serviço tem seu próprio schema no banco de dados  
+✅ **Event-Driven**: Comunicação assíncrona via RabbitMQ para desacoplamento  
+✅ **API Gateway Pattern**: Ponto único de entrada para o frontend  
+✅ **Service Discovery**: Kubernetes DNS para localização automática de serviços  
+✅ **Health Checks**: Monitoramento individual de cada serviço  
+✅ **Horizontal Scaling**: Réplicas independentes com load balancing automático  
+✅ **Containerização**: Todos os componentes rodando em containers Docker  
 
-### Infraestrutura
-
-4. **API Gateway** (porta interna 8080, exposta via NodePort)
-   - Roteamento centralizado para todos os serviços
-   - Configuração de CORS
-   - Ponto único de entrada para o frontend
-   - **Nota:** Roda em um pod separado do User Service
-
-5. **Frontend** (porta interna 80, exposta via NodePort ou Ingress)
-   - Interface web em React/Vite com React Router
-   - Dashboard de gestão completo
-   - Módulos de Professores, Alunos e Usuários
-   - CRUD completo para Professores e Alunos
-   - Visualização de Usuários
-   - Comunicação com backend via API Gateway
-   - Configuração dinâmica de URL da API
-
-6. **PostgreSQL**
-   - Banco de dados relacional
-   - Migrations gerenciadas com Flyway
-
-7. **RabbitMQ**
-   - Mensageria assíncrona entre serviços
-   - Exchange padronizado: `distrischool.events.exchange`
-   - Console de gerenciamento na porta 15672
+**Para arquitetura detalhada, consulte [ARCHITECTURE.md](./ARCHITECTURE.md)**
 
 ## 🚀 Tecnologias
 
 ### Backend
-- **Java 17**
-- **Spring Boot 3.5.6**
-- **Spring Cloud Gateway 2024.0.2**
-- **Spring Data JPA**
-- **Spring AMQP** (RabbitMQ)
-- **Spring Security**
-- **Flyway** (migrations)
-- **Lombok**
-- **SpringDoc OpenAPI** (Swagger)
+- **Java 17** - Linguagem de programação
+- **Spring Boot 3.5.6** - Framework de aplicação
+- **Spring Cloud Gateway 2024.0.2** - API Gateway
+- **Spring Data JPA** - Persistência de dados
+- **Spring AMQP** - Integração com RabbitMQ
+- **Flyway** - Migrations de banco de dados
+- **Lombok** - Redução de boilerplate
+- **SpringDoc OpenAPI** - Documentação Swagger
 
 ### Frontend
-- **React 19**
-- **React Router DOM 7**
-- **Vite 7**
-- **Nginx** (produção)
+- **React 19** - Biblioteca UI
+- **React Router DOM 7** - Roteamento SPA
+- **Vite 7** - Build tool moderna
+- **Nginx** - Web server para produção
 
-### DevOps
-- **Docker**
-- **Kubernetes**
-- **Kubernetes Ingress** (NGINX Ingress Controller)
-- **Minikube** (desenvolvimento local)
-- **Maven**
+### Banco de Dados e Mensageria
+- **PostgreSQL 15** - Banco de dados relacional
+- **RabbitMQ 3** - Message broker AMQP
+
+### DevOps e Infraestrutura
+- **Docker** - Containerização
+- **Kubernetes** - Orquestração de containers
+- **Minikube** - Kubernetes local
+- **NGINX Ingress Controller** - Roteamento externo
+- **Maven** - Build automation
 
 ## 📋 Pré-requisitos
 
@@ -90,204 +122,176 @@ A plataforma é composta por múltiplos microserviços independentes:
 ### 1. Clone o Repositório
 
 ```bash
-git clone <URL_DO_REPOSITORIO>
+git clone https://github.com/bmatox/distrischool-professor-tecadm-service.git
 cd distrischool-professor-tecadm-service
 ```
 
-### 2. Deploy no Minikube
+### 2. Deploy Automatizado (Recomendado)
 
-#### ⭐ Opção 1: Deploy Completo Automatizado (Recomendado - Novo!)
+**O método mais simples e completo:**
 
-**Novos scripts PowerShell para gerenciamento completo do ambiente:**
-
-**PowerShell (Windows):**
 ```powershell
-# Deploy completo (inclui configuração do Minikube, build e deploy)
+# Executar como Administrador (Windows PowerShell)
 .\full-deploy.ps1
 
-# Adicionar ao arquivo hosts (executar como Administrador)
-$minikubeIp = minikube ip
-Add-Content -Path C:\Windows\System32\drivers\etc\hosts -Value "$minikubeIp distrischool.local"
+# Quando solicitado, abrir outro PowerShell como Admin e executar:
+minikube tunnel
 
-# Acessar
-# Frontend: http://distrischool.local
-# API: http://distrischool.local/api
-
-# Para resetar o ambiente completamente
-.\clean-setup.ps1
+# Acessar a aplicação
+http://distrischool.local
 ```
 
-📖 **Guia completo dos novos scripts:** [POWERSHELL_SCRIPTS_GUIDE.md](./POWERSHELL_SCRIPTS_GUIDE.md)
+O script `full-deploy.ps1` realiza automaticamente:
+- ✅ Configuração do Minikube (4 CPUs, 8GB RAM)
+- ✅ Habilitação e configuração do Ingress
+- ✅ Build de todas as imagens Docker
+- ✅ Deploy de infraestrutura (PostgreSQL, RabbitMQ)
+- ✅ Deploy de todos os microserviços
+- ✅ Deploy do frontend
+- ✅ Configuração do arquivo hosts
+- ✅ Validação do sistema
 
-#### Opção 2: Deploy com Ingress (Scripts Anteriores)
+**⏱️ Tempo total**: 10-20 minutos (primeira vez)
 
-O método usa Ingress para fornecer URLs estáveis, eliminando portas dinâmicas.
+**📖 Para entender o que acontece nos bastidores, consulte [DEPLOYMENT_GUIDE.md](./DEPLOYMENT_GUIDE.md)**
 
-**Bash (Linux/Mac):**
-```bash
-# Habilitar Ingress no Minikube
-minikube addons enable ingress
+### 3. Verificar o Deploy
 
-# Deploy automatizado
-./deploy-with-ingress.sh
-
-# Adicionar ao /etc/hosts
-echo "$(minikube ip) distrischool.local" | sudo tee -a /etc/hosts
-
-# Acessar
-# Frontend: http://distrischool.local
-# API: http://distrischool.local/api
-```
-
-**PowerShell (Windows):**
 ```powershell
-# Habilitar Ingress no Minikube
-minikube addons enable ingress
+# Ver status dos pods
+kubectl get pods
 
-# Deploy automatizado
-.\deploy-with-ingress.ps1
+# Todos devem estar "Running"
 
-# Adicionar ao arquivo hosts (executar como Administrador)
-Add-Content -Path C:\Windows\System32\drivers\etc\hosts -Value "$(minikube ip) distrischool.local"
+# Acessar aplicação
+Start-Process "http://distrischool.local"
 
-# Acessar
-# Frontend: http://distrischool.local
-# API: http://distrischool.local/api
+# Testar API
+curl http://distrischool.local/api/v1/professores
 ```
 
-📖 **Guia completo:** [INGRESS_DEPLOYMENT_GUIDE.md](./INGRESS_DEPLOYMENT_GUIDE.md)
+### Métodos Alternativos de Deploy
 
-#### Opção 3: Deploy com NodePort (Portas Dinâmicas)
+O método recomendado é usar `full-deploy.ps1`, mas existem alternativas:
 
-**Windows (PowerShell):**
-```powershell
-.\setup-dev-env.ps1
-```
-
-**Linux/Mac (Bash):**
-```bash
-./build-all.sh
-./deploy-all.sh
-
-# Obter URLs dinâmicas
-minikube service frontend-service --url
-minikube service api-gateway-service --url
-```
-
-📖 **Guia completo:** [TESTING_MINIKUBE.md](./TESTING_MINIKUBE.md)
-
-#### Opção 4: Setup Manual
-
-```bash
-# Inicie o Minikube
-minikube start --cpus=4 --memory=8192
-
-# Configure o Docker para usar o daemon do Minikube
-eval $(minikube docker-env)
-
-# Construa todas as imagens
-docker build -t distrischool-professor-tecadm-service:latest .
-cd Distrischool-aluno-main && docker build -t distrischool-aluno-service:latest . && cd ..
-cd distrischool-user-service-main/user-service && docker build -t distrischool-user-service:latest . && cd ../..
-cd api-gateway && docker build -t distrischool-api-gateway:latest . && cd ..
-cd frontend && docker build -t distrischool-frontend:latest . && cd ..
-
-# Faça o deploy
-kubectl apply -f k8s-manifests/postgres/
-kubectl apply -f k8s-manifests/rabbitmq/
-kubectl apply -f k8s-manifests/professor-service/
-kubectl apply -f k8s-manifests/aluno-service/
-kubectl apply -f k8s-manifests/user-service/
-kubectl apply -f k8s-manifests/api-gateway/
-kubectl apply -f k8s-manifests/frontend/
-
-# Acesse os serviços
-minikube service frontend-service
-minikube service api-gateway-service --url
-minikube service rabbitmq-service --url
-```
+- **Deploy com Ingress manual**: Ver [POWERSHELL_SCRIPTS_GUIDE.md](./POWERSHELL_SCRIPTS_GUIDE.md)
+- **Deploy com NodePort**: Consultar [DEPLOYMENT_GUIDE.md](./DEPLOYMENT_GUIDE.md)
+- **Desenvolvimento local**: Usar `docker-compose.yml` na raiz
 
 ## 📁 Estrutura do Projeto
 
 ```
-.
-├── src/                                    # Código do Professor Service
-├── Distrischool-aluno-main/               # Código do Aluno Service
-├── distrischool-user-service-main/        # User Service e API Gateway
-│   ├── api-gateway/                       # API Gateway
-│   └── user-service/                      # User Service
-├── api-gateway/                           # API Gateway (cópia na raiz)
-├── frontend/                              # Frontend React
-├── k8s-manifests/                         # Manifestos Kubernetes
-│   ├── postgres/                          # PostgreSQL
-│   ├── rabbitmq/                          # RabbitMQ
-│   ├── professor-service/                 # Professor Service
-│   ├── aluno-service/                     # Aluno Service
-│   ├── user-service/                      # User Service
-│   ├── api-gateway/                       # API Gateway
-│   └── frontend/                          # Frontend
-├── MESSAGING_CONTRACT.md                  # Contrato de mensageria
-├── TESTING_MINIKUBE.md                    # Guia de deploy no Minikube
-├── docker-compose.yml                     # Docker Compose (dev local)
-└── README.md                              # Este arquivo
+distrischool-professor-tecadm-service/
+├── 📂 src/                          # Professor Service (Spring Boot)
+├── 📂 distrischool-aluno-main/      # Aluno Service
+├── 📂 distrischool-user-service-main/ # User Service
+├── 📂 api-gateway/                  # API Gateway (Spring Cloud Gateway)
+├── 📂 frontend/                     # Frontend (React + Vite + Nginx)
+├── 📂 k8s-manifests/                # Kubernetes manifests
+│   ├── postgres/                    # PostgreSQL deployment
+│   ├── rabbitmq/                    # RabbitMQ deployment
+│   ├── professor-service/           # Professor Service deployment
+│   ├── aluno-service/               # Aluno Service deployment
+│   ├── user-service/                # User Service deployment
+│   ├── api-gateway/                 # API Gateway deployment
+│   ├── frontend/                    # Frontend deployment
+│   └── ingress.yaml                 # Ingress rules
+├── 🔧 full-deploy.ps1               # Script de deploy automatizado
+├── 🔧 clean-setup.ps1               # Script de limpeza
+├── 📄 docker-compose.yml            # Docker Compose para dev local
+└── 📄 Dockerfile                    # Professor Service Dockerfile
 ```
+
+**📖 Para estrutura detalhada, consulte [FOLDER_STRUCTURE.md](./FOLDER_STRUCTURE.md)**
 
 ## 🔌 Endpoints da API
 
-### Via API Gateway (http://localhost:8080 ou minikube service)
+### URL Base
+- **Com Ingress**: `http://distrischool.local/api`
+- **Direto (port-forward)**: `http://localhost:PORTA/api`
 
-#### Professores
-- `GET /api/v1/professores` - Lista professores (paginado)
-- `GET /api/v1/professores/{id}` - Busca professor por ID
-- `POST /api/v1/professores` - Cria novo professor
-- `PUT /api/v1/professores/{id}` - Atualiza professor
-- `DELETE /api/v1/professores/{id}` - Remove professor
+### Professor Service (Porta 8082)
 
-#### Alunos
-- `GET /api/alunos` - Lista alunos
-- `GET /api/alunos/{id}` - Busca aluno por ID
-- `GET /api/alunos/matricula/{matricula}` - Busca por matrícula
-- `POST /api/alunos` - Cria novo aluno
-- `PUT /api/alunos/{id}` - Atualiza aluno
-- `DELETE /api/alunos/{id}` - Remove aluno
+| Método | Endpoint | Descrição |
+|--------|----------|-----------|
+| GET | `/v1/professores` | Lista professores (paginado) |
+| GET | `/v1/professores/{id}` | Busca professor por ID |
+| POST | `/v1/professores` | Cria novo professor |
+| PUT | `/v1/professores/{id}` | Atualiza professor |
+| DELETE | `/v1/professores/{id}` | Remove professor |
 
-#### Usuários
-- `GET /api/users` - Lista usuários (paginado)
-- `GET /api/users/{id}` - Busca usuário por ID
-- `POST /api/users` - Cria novo usuário
-- `PUT /api/users/{id}` - Atualiza usuário
-- `DELETE /api/users/{id}` - Remove usuário
+### Aluno Service (Porta 8081)
 
-## 📨 Mensageria (RabbitMQ)
+| Método | Endpoint | Descrição |
+|--------|----------|-----------|
+| GET | `/alunos` | Lista alunos |
+| GET | `/alunos/{id}` | Busca aluno por ID |
+| GET | `/alunos/matricula/{matricula}` | Busca por matrícula |
+| POST | `/alunos` | Cria novo aluno |
+| PUT | `/alunos/{id}` | Atualiza aluno |
+| DELETE | `/alunos/{id}` | Remove aluno |
 
-Todos os serviços publicam eventos em uma exchange padronizada. Veja [MESSAGING_CONTRACT.md](./MESSAGING_CONTRACT.md) para detalhes completos.
+### User Service (Porta 8080)
 
-### Exchange
-- **Nome:** `distrischool.events.exchange`
-- **Tipo:** topic
-- **Durável:** true
+| Método | Endpoint | Descrição |
+|--------|----------|-----------|
+| GET | `/users` | Lista usuários (paginado) |
+| GET | `/users/{id}` | Busca usuário por ID |
+| POST | `/users` | Cria novo usuário |
+| PUT | `/users/{id}` | Atualiza usuário |
+| DELETE | `/users/{id}` | Remove usuário |
 
-### Routing Keys
-- `professor.created` - Professor criado
-- `professor.updated` - Professor atualizado
-- `professor.deleted` - Professor removido
-- `aluno.created` - Aluno criado
-- `aluno.updated` - Aluno atualizado
-- `aluno.deleted` - Aluno removido
-- `user.created` - Usuário criado
-- `user.updated` - Usuário atualizado
-- `user.deleted` - Usuário removido
-
+**📖 Para exemplos de requisições e respostas, consulte [API_TESTING_GUIDE.md](./API_TESTING_GUIDE.md)**
 ## 🧪 Testes
 
-### Build e Testes Unitários
+### Testando Arquitetura de Microserviços
+
+O projeto inclui testes práticos para **provar** a implementação de microserviços:
+
+```powershell
+# Testar independência dos serviços
+kubectl scale deployment professor-tecadm-deployment --replicas=0  # Parar Professor Service
+curl http://distrischool.local/api/alunos  # Aluno Service continua funcionando!
+
+# Testar escalabilidade horizontal
+kubectl scale deployment professor-tecadm-deployment --replicas=3  # 3 réplicas
+
+# Testar resiliência
+kubectl delete pod <nome-do-pod>  # Kubernetes recria automaticamente
+```
+
+**📖 Para testes completos de microserviços, consulte [MICROSERVICES_TESTING.md](./MICROSERVICES_TESTING.md)**
+
+### Testando APIs
+
+```powershell
+# Criar professor
+$body = @{
+    nome = "João Silva"
+    email = "joao@test.com"
+    cpf = "12345678901"
+    departamento = "TI"
+    titulacao = "MESTRE"
+    dataContratacao = "2025-01-01"
+} | ConvertTo-Json
+
+Invoke-RestMethod -Uri "http://distrischool.local/api/v1/professores" `
+    -Method POST -Body $body -ContentType "application/json"
+
+# Listar professores
+Invoke-RestMethod -Uri "http://distrischool.local/api/v1/professores"
+```
+
+**📖 Para exemplos completos de todas as APIs, consulte [API_TESTING_GUIDE.md](./API_TESTING_GUIDE.md)**
+
+### Testes Unitários
 
 ```bash
 # Professor Service
 ./mvnw clean test
 
 # Aluno Service
-cd Distrischool-aluno-main
+cd distrischool-aluno-main
 ./mvnw clean test
 
 # User Service
@@ -295,58 +299,108 @@ cd distrischool-user-service-main/user-service
 ./mvnw clean test
 ```
 
-### Testes de Integração no Minikube
+## 📊 Monitoramento
 
-Consulte [TESTING_MINIKUBE.md](./TESTING_MINIKUBE.md) para cenários de teste completos.
+### Health Checks
 
-### Testes Funcionais do Frontend
+Todos os serviços expõem endpoints de health via Spring Boot Actuator:
 
-Consulte [TESTING_GUIDE.md](./TESTING_GUIDE.md) para guia detalhado de testes de cada funcionalidade através do navegador.
+```powershell
+# Via API Gateway
+curl http://distrischool.local/api/actuator/health
 
-## 🎨 Frontend - Funcionalidades
+# Direto (com port-forward)
+kubectl port-forward deployment/professor-tecadm-deployment 8082:8082
+curl http://localhost:8082/actuator/health
+```
 
-### Dashboard Principal
-- Navegação entre módulos (Professores, Alunos, Usuários)
-- Cards informativos sobre cada módulo
-- Interface responsiva e moderna
+**Resposta esperada**:
+```json
+{
+  "status": "UP",
+  "components": {
+    "db": {"status": "UP"},
+    "rabbit": {"status": "UP"},
+    "diskSpace": {"status": "UP"}
+  }
+}
+```
 
-### Módulo de Professores
-- ✅ **Listar (GET):** Visualização em cards de todos os professores
-- ✅ **Criar (POST):** Formulário para cadastro de novo professor
-- ✅ **Excluir (DELETE):** Remoção de professor com confirmação
-- 📋 Campos: Nome, Email, Especialidade, Data de Contratação
+### RabbitMQ Management Console
 
-### Módulo de Alunos
-- ✅ **Listar (GET):** Visualização em cards de todos os alunos
-- ✅ **Criar (POST):** Formulário completo para cadastro de aluno
-- 📋 Campos: Nome, Matrícula, Email, Data de Nascimento
-- 📋 Endereço completo: Rua, Número, Bairro, Cidade, Estado, CEP
+Acesse a interface web do RabbitMQ:
 
-### Módulo de Usuários
-- ✅ **Listar (GET):** Visualização em cards de todos os usuários
-- 📋 Exibe: Username, Email, Função, Data de criação
+```powershell
+# Obter URL
+minikube service rabbitmq-service --url
+# Usar a porta 15672
 
-### Características Técnicas
-- 🔄 **SPA com React Router:** Navegação sem reload de página
-- 🌐 **API Dinâmica:** Configuração via `/config.js` ou variável de ambiente
-- 📱 **Design Responsivo:** Interface adaptável para desktop e mobile
-- 🎨 **UI/UX Moderna:** Gradientes, animações e transições suaves
-- ⚡ **Performance:** Otimizado com Vite e lazy loading
+# Credenciais
+# Usuário: guest
+# Senha: guest
+```
+
+**Funcionalidades**:
+- Ver filas e exchanges
+- Monitorar mensagens
+- Visualizar bindings
+- Debug de eventos
+
+### Kubernetes Dashboard
+
+```bash
+minikube dashboard
+```
+
+Visualize:
+- Status de todos os pods
+- Logs em tempo real
+- Uso de recursos (CPU, memória)
+- Eventos do cluster
+
+## 📨 Mensageria (RabbitMQ)
+
+O sistema usa eventos assíncronos para comunicação entre serviços:
+
+### Exchange
+- **Nome**: `distrischool.events.exchange`
+- **Tipo**: topic
+- **Durável**: true
+
+### Routing Keys
+- `professor.created`, `professor.updated`, `professor.deleted`
+- `aluno.created`, `aluno.updated`, `aluno.deleted`  
+- `user.created`, `user.updated`, `user.deleted`
+
+### Exemplo de Uso
+
+```java
+// Publicar evento
+rabbitTemplate.convertAndSend(
+    "distrischool.events.exchange",
+    "professor.created",
+    professor
+);
+
+// Consumir evento (em outro serviço)
+@RabbitListener(queues = "professor.events.queue")
+public void handleProfessorCreated(Professor professor) {
+    // Reagir ao evento
+}
+```
 
 ## 🔧 Desenvolvimento Local
 
 ### Backend (sem Kubernetes)
 
-Cada serviço pode ser executado localmente com PostgreSQL e RabbitMQ:
-
 ```bash
-# Inicie PostgreSQL e RabbitMQ
+# Iniciar apenas infraestrutura
 docker-compose up -d postgres rabbitmq
 
-# Execute o serviço
+# Executar serviço
 ./mvnw spring-boot:run
 
-# Ou
+# Ou compilar e executar
 ./mvnw clean package
 java -jar target/*.jar
 ```
@@ -361,72 +415,80 @@ npm run dev
 
 Acesse: http://localhost:5173
 
-## 📊 Monitoramento
-
-### Health Checks
-
-Todos os serviços expõem endpoints de health:
-- Professor Service: http://professor-tecadm-service:8082/actuator/health
-- Aluno Service: http://aluno-service:8081/actuator/health
-- User Service: http://user-service:8080/actuator/health
-- API Gateway: http://api-gateway-service:8080/actuator/health
-
-### RabbitMQ Management Console
-
-Acesse a console de gerenciamento do RabbitMQ:
-- URL: `minikube service rabbitmq-service --url` (porta 15672)
-- Usuário: `guest`
-- Senha: `guest`
-
-### Kubernetes Dashboard
-
-```bash
-minikube dashboard
-```
-
 ## 🐛 Troubleshooting
 
-### Serviço não inicia
+### Problemas Comuns
 
+**1. Pods não iniciam (ImagePullBackOff)**
+```powershell
+# Verificar se Docker está usando daemon do Minikube
+minikube docker-env --shell powershell | Invoke-Expression
+
+# Verificar imagens disponíveis
+docker images | Select-String "distrischool"
+
+# Se necessário, rebuildar
+docker build -t distrischool-professor-tecadm-service:latest .
+```
+
+**2. Serviço não inicia (CrashLoopBackOff)**
 ```bash
-# Verifique os logs
+# Ver logs do pod
 kubectl logs <pod-name>
 
-# Verifique o status
+# Verificar detalhes
 kubectl describe pod <pod-name>
+
+# Comum: Erro de conexão com PostgreSQL ou RabbitMQ
+# Verificar se infraestrutura está rodando
+kubectl get pods | grep -E "postgres|rabbitmq"
 ```
 
-### Erro de conexão com o banco
+**3. Frontend não carrega**
+```powershell
+# Verificar se minikube tunnel está rodando
+# Deve haver um terminal executando: minikube tunnel
 
-Verifique se o PostgreSQL está rodando:
-```bash
-kubectl get pods | grep postgres
-kubectl logs <postgres-pod-name>
+# Verificar arquivo hosts
+Get-Content C:\Windows\System32\drivers\etc\hosts | Select-String "distrischool"
+
+# Adicionar se necessário (como Admin)
+Add-Content -Path C:\Windows\System32\drivers\etc\hosts -Value "`n127.0.0.1 distrischool.local"
+
+# Limpar cache DNS
+ipconfig /flushdns
 ```
 
-### Frontend não carrega dados
+**4. API retorna 404**
+```powershell
+# Testar diretamente o serviço
+kubectl port-forward deployment/professor-tecadm-deployment 8082:8082
+curl http://localhost:8082/api/v1/professores
 
-1. Verifique se o API Gateway está acessível
-2. Verifique a configuração de CORS no Gateway
-3. Verifique a URL configurada no frontend:
-   - Com Ingress: deve usar `/api` (relativo)
-   - Com NodePort: deve usar a URL completa do gateway
-4. Verifique o console do navegador para erros CORS
-5. Veja [INGRESS_DEPLOYMENT_GUIDE.md](./INGRESS_DEPLOYMENT_GUIDE.md) para configuração com Ingress
+# Se funcionar, problema está no API Gateway ou Ingress
+# Ver logs do API Gateway
+kubectl logs deployment/api-gateway-deployment
+```
 
-Para mais detalhes de troubleshooting, consulte:
-- [TESTING_MINIKUBE.md](./TESTING_MINIKUBE.md) - Deploy com NodePort
-- [INGRESS_DEPLOYMENT_GUIDE.md](./INGRESS_DEPLOYMENT_GUIDE.md) - Deploy com Ingress
-- [TESTING_GUIDE.md](./TESTING_GUIDE.md) - Testes funcionais
+**📖 Para troubleshooting detalhado, consulte [DEPLOYMENT_GUIDE.md](./DEPLOYMENT_GUIDE.md)**
 
-## 📚 Documentação Adicional
+## 🧹 Limpando o Ambiente
 
-- **[POWERSHELL_SCRIPTS_GUIDE.md](./POWERSHELL_SCRIPTS_GUIDE.md)** - 🆕 Guia completo dos scripts PowerShell (clean-setup.ps1 e full-deploy.ps1)
-- **[INGRESS_DEPLOYMENT_GUIDE.md](./INGRESS_DEPLOYMENT_GUIDE.md)** - 🆕 Guia de deploy com Ingress (URLs estáveis)
-- **[TESTING_GUIDE.md](./TESTING_GUIDE.md)** - 🆕 Guia completo de testes funcionais por módulo
-- [MESSAGING_CONTRACT.md](./MESSAGING_CONTRACT.md) - Contrato de mensageria RabbitMQ
-- [TESTING_MINIKUBE.md](./TESTING_MINIKUBE.md) - Guia de deploy e testes no Minikube
-- [CORS_FIX_SUMMARY.md](./CORS_FIX_SUMMARY.md) - Detalhes da correção CORS
+Para remover completamente o ambiente:
+
+```powershell
+# Script automatizado
+.\clean-setup.ps1
+
+# Ou manualmente
+kubectl delete all --all
+kubectl delete ingress --all
+minikube stop
+minikube delete
+
+# Remover imagens (opcional)
+docker system prune -a
+```
 
 ## 🤝 Contribuindo
 
@@ -438,7 +500,7 @@ Para mais detalhes de troubleshooting, consulte:
 
 ## 📝 Licença
 
-Este projeto está sob a licença MIT. Veja o arquivo LICENSE para mais detalhes.
+Este projeto está sob a licença MIT.
 
 ## 👥 Autores
 
@@ -449,3 +511,9 @@ Este projeto está sob a licença MIT. Veja o arquivo LICENSE para mais detalhes
 - Spring Boot Team
 - RabbitMQ Team
 - Kubernetes Community
+- React Team
+- Todos os contribuidores open-source
+
+---
+
+**⭐ Se este projeto foi útil, considere dar uma estrela no GitHub!**
