@@ -31,10 +31,14 @@ A plataforma é composta por múltiplos microserviços independentes:
    - Ponto único de entrada para o frontend
    - **Nota:** Roda em um pod separado do User Service
 
-5. **Frontend** (porta interna 80, exposta via NodePort)
-   - Interface web em React/Vite
-   - Visualização de professores
+5. **Frontend** (porta interna 80, exposta via NodePort ou Ingress)
+   - Interface web em React/Vite com React Router
+   - Dashboard de gestão completo
+   - Módulos de Professores, Alunos e Usuários
+   - CRUD completo para Professores e Alunos
+   - Visualização de Usuários
    - Comunicação com backend via API Gateway
+   - Configuração dinâmica de URL da API
 
 6. **PostgreSQL**
    - Banco de dados relacional
@@ -59,13 +63,15 @@ A plataforma é composta por múltiplos microserviços independentes:
 - **SpringDoc OpenAPI** (Swagger)
 
 ### Frontend
-- **React 18**
-- **Vite**
+- **React 19**
+- **React Router DOM 7**
+- **Vite 7**
 - **Nginx** (produção)
 
 ### DevOps
 - **Docker**
 - **Kubernetes**
+- **Kubernetes Ingress** (NGINX Ingress Controller)
 - **Minikube** (desenvolvimento local)
 - **Maven**
 
@@ -90,9 +96,45 @@ cd distrischool-professor-tecadm-service
 
 ### 2. Deploy no Minikube
 
-Siga o guia completo em [TESTING_MINIKUBE.md](./TESTING_MINIKUBE.md) para instruções detalhadas de deploy.
+#### ⭐ Opção 1: Deploy com Ingress (Recomendado - URLs Estáveis)
 
-#### Opção 1: Script Automatizado (Recomendado)
+O método recomendado usa Ingress para fornecer URLs estáveis, eliminando portas dinâmicas.
+
+**Bash (Linux/Mac):**
+```bash
+# Habilitar Ingress no Minikube
+minikube addons enable ingress
+
+# Deploy automatizado
+./deploy-with-ingress.sh
+
+# Adicionar ao /etc/hosts
+echo "$(minikube ip) distrischool.local" | sudo tee -a /etc/hosts
+
+# Acessar
+# Frontend: http://distrischool.local
+# API: http://distrischool.local/api
+```
+
+**PowerShell (Windows):**
+```powershell
+# Habilitar Ingress no Minikube
+minikube addons enable ingress
+
+# Deploy automatizado
+.\deploy-with-ingress.ps1
+
+# Adicionar ao arquivo hosts (executar como Administrador)
+Add-Content -Path C:\Windows\System32\drivers\etc\hosts -Value "$(minikube ip) distrischool.local"
+
+# Acessar
+# Frontend: http://distrischool.local
+# API: http://distrischool.local/api
+```
+
+📖 **Guia completo:** [INGRESS_DEPLOYMENT_GUIDE.md](./INGRESS_DEPLOYMENT_GUIDE.md)
+
+#### Opção 2: Deploy com NodePort (Portas Dinâmicas)
 
 **Windows (PowerShell):**
 ```powershell
@@ -103,9 +145,15 @@ Siga o guia completo em [TESTING_MINIKUBE.md](./TESTING_MINIKUBE.md) para instru
 ```bash
 ./build-all.sh
 ./deploy-all.sh
+
+# Obter URLs dinâmicas
+minikube service frontend-service --url
+minikube service api-gateway-service --url
 ```
 
-#### Opção 2: Setup Manual
+📖 **Guia completo:** [TESTING_MINIKUBE.md](./TESTING_MINIKUBE.md)
+
+#### Opção 3: Setup Manual
 
 ```bash
 # Inicie o Minikube
@@ -228,6 +276,40 @@ cd distrischool-user-service-main/user-service
 
 Consulte [TESTING_MINIKUBE.md](./TESTING_MINIKUBE.md) para cenários de teste completos.
 
+### Testes Funcionais do Frontend
+
+Consulte [TESTING_GUIDE.md](./TESTING_GUIDE.md) para guia detalhado de testes de cada funcionalidade através do navegador.
+
+## 🎨 Frontend - Funcionalidades
+
+### Dashboard Principal
+- Navegação entre módulos (Professores, Alunos, Usuários)
+- Cards informativos sobre cada módulo
+- Interface responsiva e moderna
+
+### Módulo de Professores
+- ✅ **Listar (GET):** Visualização em cards de todos os professores
+- ✅ **Criar (POST):** Formulário para cadastro de novo professor
+- ✅ **Excluir (DELETE):** Remoção de professor com confirmação
+- 📋 Campos: Nome, Email, Especialidade, Data de Contratação
+
+### Módulo de Alunos
+- ✅ **Listar (GET):** Visualização em cards de todos os alunos
+- ✅ **Criar (POST):** Formulário completo para cadastro de aluno
+- 📋 Campos: Nome, Matrícula, Email, Data de Nascimento
+- 📋 Endereço completo: Rua, Número, Bairro, Cidade, Estado, CEP
+
+### Módulo de Usuários
+- ✅ **Listar (GET):** Visualização em cards de todos os usuários
+- 📋 Exibe: Username, Email, Função, Data de criação
+
+### Características Técnicas
+- 🔄 **SPA com React Router:** Navegação sem reload de página
+- 🌐 **API Dinâmica:** Configuração via `/config.js` ou variável de ambiente
+- 📱 **Design Responsivo:** Interface adaptável para desktop e mobile
+- 🎨 **UI/UX Moderna:** Gradientes, animações e transições suaves
+- ⚡ **Performance:** Otimizado com Vite e lazy loading
+
 ## 🔧 Desenvolvimento Local
 
 ### Backend (sem Kubernetes)
@@ -303,14 +385,24 @@ kubectl logs <postgres-pod-name>
 
 1. Verifique se o API Gateway está acessível
 2. Verifique a configuração de CORS no Gateway
-3. Verifique a URL configurada no frontend (VITE_API_URL)
+3. Verifique a URL configurada no frontend:
+   - Com Ingress: deve usar `/api` (relativo)
+   - Com NodePort: deve usar a URL completa do gateway
+4. Verifique o console do navegador para erros CORS
+5. Veja [INGRESS_DEPLOYMENT_GUIDE.md](./INGRESS_DEPLOYMENT_GUIDE.md) para configuração com Ingress
 
-Para mais detalhes de troubleshooting, consulte [TESTING_MINIKUBE.md](./TESTING_MINIKUBE.md).
+Para mais detalhes de troubleshooting, consulte:
+- [TESTING_MINIKUBE.md](./TESTING_MINIKUBE.md) - Deploy com NodePort
+- [INGRESS_DEPLOYMENT_GUIDE.md](./INGRESS_DEPLOYMENT_GUIDE.md) - Deploy com Ingress
+- [TESTING_GUIDE.md](./TESTING_GUIDE.md) - Testes funcionais
 
 ## 📚 Documentação Adicional
 
+- **[INGRESS_DEPLOYMENT_GUIDE.md](./INGRESS_DEPLOYMENT_GUIDE.md)** - 🆕 Guia de deploy com Ingress (URLs estáveis)
+- **[TESTING_GUIDE.md](./TESTING_GUIDE.md)** - 🆕 Guia completo de testes funcionais por módulo
 - [MESSAGING_CONTRACT.md](./MESSAGING_CONTRACT.md) - Contrato de mensageria RabbitMQ
-- [TESTING_MINIKUBE.md](./TESTING_MINIKUBE.md) - Guia completo de deploy e testes no Minikube
+- [TESTING_MINIKUBE.md](./TESTING_MINIKUBE.md) - Guia de deploy e testes no Minikube
+- [CORS_FIX_SUMMARY.md](./CORS_FIX_SUMMARY.md) - Detalhes da correção CORS
 
 ## 🤝 Contribuindo
 
