@@ -39,4 +39,4 @@ app:
     allowed-origins: "*"
     allowed-methods: "GET,POST,PUT,DELETE,OPTIONS"
     allowed-headers: "*"
-    allow-credentials: true
+    allow-credentials: false
