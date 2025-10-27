@@ -26,6 +26,7 @@ fi
 
 echo -e "${YELLOW}[1/5] Building API Gateway with Maven...${NC}"
 cd api-gateway
+# Skipping tests for faster deployment - tests were already verified in CI/CD
 mvn clean package -DskipTests -q
 if [ $? -ne 0 ]; then
     echo -e "${RED}Erro ao compilar o projeto Maven!${NC}"

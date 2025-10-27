@@ -12,6 +12,7 @@ RED='\033[0;31m'
 NC='\033[0m' # No Color
 
 # URL do API Gateway (pode ser passada como argumento)
+# Default usa porta dinâmica do Minikube - obtenha com: minikube service api-gateway-service --url
 API_GATEWAY_URL="${1:-http://127.0.0.1:54717}"
 FRONTEND_ORIGIN="http://127.0.0.1:60002"
 
@@ -36,24 +37,24 @@ test_preflight() {
         -H "Access-Control-Request-Headers: Content-Type" \
         2>&1)
     
-    if echo "$response" | grep -q "Access-Control-Allow-Origin"; then
+    if echo "$response" | grep -q "Access-Control-Allow-Origin:"; then
         echo -e "${GREEN}✓ Header Access-Control-Allow-Origin encontrado${NC}"
-        echo "$response" | grep "Access-Control-Allow-Origin"
+        echo "$response" | grep "Access-Control-Allow-Origin:"
     else
         echo -e "${RED}✗ Header Access-Control-Allow-Origin NÃO encontrado${NC}"
         return 1
     fi
     
-    if echo "$response" | grep -q "Access-Control-Allow-Methods"; then
+    if echo "$response" | grep -q "Access-Control-Allow-Methods:"; then
         echo -e "${GREEN}✓ Header Access-Control-Allow-Methods encontrado${NC}"
-        echo "$response" | grep "Access-Control-Allow-Methods"
+        echo "$response" | grep "Access-Control-Allow-Methods:"
     else
         echo -e "${YELLOW}⚠ Header Access-Control-Allow-Methods NÃO encontrado${NC}"
     fi
     
-    if echo "$response" | grep -q "Access-Control-Max-Age"; then
+    if echo "$response" | grep -q "Access-Control-Max-Age:"; then
         echo -e "${GREEN}✓ Header Access-Control-Max-Age encontrado${NC}"
-        echo "$response" | grep "Access-Control-Max-Age"
+        echo "$response" | grep "Access-Control-Max-Age:"
     else
         echo -e "${YELLOW}⚠ Header Access-Control-Max-Age NÃO encontrado${NC}"
     fi
@@ -73,9 +74,9 @@ test_get_request() {
         -H "Origin: $FRONTEND_ORIGIN" \
         2>&1)
     
-    if echo "$response" | grep -q "Access-Control-Allow-Origin"; then
+    if echo "$response" | grep -q "Access-Control-Allow-Origin:"; then
         echo -e "${GREEN}✓ Header Access-Control-Allow-Origin encontrado${NC}"
-        echo "$response" | grep "Access-Control-Allow-Origin"
+        echo "$response" | grep "Access-Control-Allow-Origin:"
     else
         echo -e "${RED}✗ Header Access-Control-Allow-Origin NÃO encontrado${NC}"
         return 1
