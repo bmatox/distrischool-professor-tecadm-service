@@ -96,9 +96,32 @@ cd distrischool-professor-tecadm-service
 
 ### 2. Deploy no Minikube
 
-#### ⭐ Opção 1: Deploy com Ingress (Recomendado - URLs Estáveis)
+#### ⭐ Opção 1: Deploy Completo Automatizado (Recomendado - Novo!)
 
-O método recomendado usa Ingress para fornecer URLs estáveis, eliminando portas dinâmicas.
+**Novos scripts PowerShell para gerenciamento completo do ambiente:**
+
+**PowerShell (Windows):**
+```powershell
+# Deploy completo (inclui configuração do Minikube, build e deploy)
+.\full-deploy.ps1
+
+# Adicionar ao arquivo hosts (executar como Administrador)
+$minikubeIp = minikube ip
+Add-Content -Path C:\Windows\System32\drivers\etc\hosts -Value "$minikubeIp distrischool.local"
+
+# Acessar
+# Frontend: http://distrischool.local
+# API: http://distrischool.local/api
+
+# Para resetar o ambiente completamente
+.\clean-setup.ps1
+```
+
+📖 **Guia completo dos novos scripts:** [POWERSHELL_SCRIPTS_GUIDE.md](./POWERSHELL_SCRIPTS_GUIDE.md)
+
+#### Opção 2: Deploy com Ingress (Scripts Anteriores)
+
+O método usa Ingress para fornecer URLs estáveis, eliminando portas dinâmicas.
 
 **Bash (Linux/Mac):**
 ```bash
@@ -134,7 +157,7 @@ Add-Content -Path C:\Windows\System32\drivers\etc\hosts -Value "$(minikube ip) d
 
 📖 **Guia completo:** [INGRESS_DEPLOYMENT_GUIDE.md](./INGRESS_DEPLOYMENT_GUIDE.md)
 
-#### Opção 2: Deploy com NodePort (Portas Dinâmicas)
+#### Opção 3: Deploy com NodePort (Portas Dinâmicas)
 
 **Windows (PowerShell):**
 ```powershell
@@ -153,7 +176,7 @@ minikube service api-gateway-service --url
 
 📖 **Guia completo:** [TESTING_MINIKUBE.md](./TESTING_MINIKUBE.md)
 
-#### Opção 3: Setup Manual
+#### Opção 4: Setup Manual
 
 ```bash
 # Inicie o Minikube
@@ -398,6 +421,7 @@ Para mais detalhes de troubleshooting, consulte:
 
 ## 📚 Documentação Adicional
 
+- **[POWERSHELL_SCRIPTS_GUIDE.md](./POWERSHELL_SCRIPTS_GUIDE.md)** - 🆕 Guia completo dos scripts PowerShell (clean-setup.ps1 e full-deploy.ps1)
 - **[INGRESS_DEPLOYMENT_GUIDE.md](./INGRESS_DEPLOYMENT_GUIDE.md)** - 🆕 Guia de deploy com Ingress (URLs estáveis)
 - **[TESTING_GUIDE.md](./TESTING_GUIDE.md)** - 🆕 Guia completo de testes funcionais por módulo
 - [MESSAGING_CONTRACT.md](./MESSAGING_CONTRACT.md) - Contrato de mensageria RabbitMQ
