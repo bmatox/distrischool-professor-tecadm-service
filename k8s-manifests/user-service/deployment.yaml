@@ -20,24 +20,26 @@ spec:
             - containerPort: 8080
           env:
             # --- Configurações de Banco de Dados ---
-            - name: SPRING_DATASOURCE_URL # <<< Nome padrão Spring
-              value: "jdbc:postgresql://postgres-service:5432/distrischool_db" # <<< Banco unificado
-            - name: SPRING_DATASOURCE_USERNAME # <<< Nome padrão Spring
-              value: "admin" # <<< Credencial correta
-            - name: SPRING_DATASOURCE_PASSWORD # <<< Nome padrão Spring
-              value: "admin" # <<< Credencial correta
+            - name: SPRING_DATASOURCE_URL
+              value: "jdbc:postgresql://postgres-service:5432/distrischool_db"
+            - name: SPRING_DATASOURCE_USERNAME
+              value: "postgres"
+            - name: SPRING_DATASOURCE_PASSWORD
+              value: "postgres"
             # --- Configurações de Schema ---
             - name: SPRING_FLYWAY_SCHEMAS
-              value: "user_schema" # <<< Schema específico
+              value: "user_schema"
+            - name: SPRING_FLYWAY_CREATE_SCHEMAS
+              value: "true"
             - name: SPRING_JPA_PROPERTIES_HIBERNATE_DEFAULT_SCHEMA
-              value: "user_schema" # <<< Schema específico
+              value: "user_schema"
 
             # --- Configurações do RabbitMQ ---
-            - name: SPRING_RABBITMQ_HOST # <<< Nome padrão Spring
+            - name: SPRING_RABBITMQ_HOST
               value: "rabbitmq-service"
-            - name: SPRING_RABBITMQ_PORT # <<< Nome padrão Spring
+            - name: SPRING_RABBITMQ_PORT
               value: "5672"
-            - name: SPRING_RABBITMQ_USERNAME # <<< Nome padrão Spring
-              value: "admin" # <<< Credencial correta
-            - name: SPRING_RABBITMQ_PASSWORD # <<< Nome padrão Spring
-              value: "admin" # <<< Credencial correta
+            - name: SPRING_RABBITMQ_USERNAME
+              value: "guest"
+            - name: SPRING_RABBITMQ_PASSWORD
+              value: "guest"
