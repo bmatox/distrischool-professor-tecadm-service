@@ -21,18 +21,18 @@ spec:
           env:
             # --- Configurações de Banco de Dados ---
             - name: SPRING_DATASOURCE_URL
-              value: "jdbc:postgresql://postgres-service:5432/distrischool_db" # <<< Banco unificado
+              value: "jdbc:postgresql://postgres-service:5432/distrischool_db"
             - name: SPRING_DATASOURCE_USERNAME
-              value: "postgres" # <<< Credencial do .env
+              value: "postgres"
             - name: SPRING_DATASOURCE_PASSWORD
-              value: "postgres" # <<< Credencial do .env
+              value: "postgres"
             # --- Configurações de Schema ---
             - name: SPRING_FLYWAY_SCHEMAS
-              value: "professor_schema" # <<< Schema específico
+              value: "professor_schema"
             - name: SPRING_FLYWAY_CREATE_SCHEMAS
               value: "true"
             - name: SPRING_JPA_PROPERTIES_HIBERNATE_DEFAULT_SCHEMA
-              value: "professor_schema" # <<< Schema específico
+              value: "professor_schema"
 
             # --- Configurações do RabbitMQ ---
             - name: SPRING_RABBITMQ_HOST
@@ -40,6 +40,6 @@ spec:
             - name: SPRING_RABBITMQ_PORT
               value: "5672"
             - name: SPRING_RABBITMQ_USERNAME
-              value: "admin" # <<< Credencial do .env
+              value: "guest"
             - name: SPRING_RABBITMQ_PASSWORD
-              value: "admin" # <<< Credencial do .env
+              value: "guest"
