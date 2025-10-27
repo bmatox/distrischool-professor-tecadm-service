@@ -1,17 +1,27 @@
-import './App.css'
-import ProfessorList from './ProfessorList'
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import Navigation from './components/Navigation';
+import Dashboard from './pages/Dashboard';
+import ProfessorPage from './pages/ProfessorPage';
+import AlunoPage from './pages/AlunoPage';
+import UserPage from './pages/UserPage';
+import './App.css';
 
 function App() {
   return (
-    <div className="App">
-      <header className="app-header">
-        <h1>DistriSchool - Sistema de Gestão Escolar</h1>
-      </header>
-      <main>
-        <ProfessorList />
-      </main>
-    </div>
-  )
+    <Router>
+      <div className="App">
+        <Navigation />
+        <main className="app-main">
+          <Routes>
+            <Route path="/" element={<Dashboard />} />
+            <Route path="/professores" element={<ProfessorPage />} />
+            <Route path="/alunos" element={<AlunoPage />} />
+            <Route path="/usuarios" element={<UserPage />} />
+          </Routes>
+        </main>
+      </div>
+    </Router>
+  );
 }
 
-export default App
+export default App;

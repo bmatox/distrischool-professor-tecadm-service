@@ -13,21 +13,11 @@
 
 .App {
   min-height: 100vh;
+  display: flex;
+  flex-direction: column;
 }
 
-.app-header {
-  background-color: #1976d2;
-  color: white;
-  padding: 20px;
-  text-align: center;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
-
-.app-header h1 {
-  font-size: 28px;
-  font-weight: 600;
-}
-
-main {
-  padding: 20px;
+.app-main {
+  flex: 1;
+  background: #f5f5f5;
 }
