@@ -2,52 +2,6 @@
 
 O **DistriSchool** é uma plataforma completa de gestão escolar baseada em **arquitetura de microserviços**, desenvolvida com Spring Boot, containerizada com Docker e orquestrada com Kubernetes. Este projeto demonstra as melhores práticas de desenvolvimento de sistemas distribuídos, incluindo comunicação síncrona e assíncrona, isolamento de serviços, escalabilidade horizontal e resiliência a falhas.
 
-## 📚 Documentação Completa
-
-Este projeto possui documentação extensiva para facilitar o entendimento e uso do sistema:
-
-- **[ARCHITECTURE.md](./ARCHITECTURE.md)** - 🏗️ Arquitetura completa do sistema
-  - O que é o DistriSchool e seu propósito
-  - Tecnologias utilizadas em detalhes
-  - Diagramas de arquitetura
-  - Padrões arquiteturais implementados
-  - Fluxo de dados e comunicação
-
-- **[DEPLOYMENT_GUIDE.md](./DEPLOYMENT_GUIDE.md)** - 🚀 Guia completo de deploy
-  - Explicação detalhada do script `full-deploy.ps1`
-  - O que acontece nos bastidores em cada etapa
-  - Configuração do Minikube, Docker e Kubernetes
-  - Build das imagens Docker
-  - Deploy de infraestrutura e microserviços
-  - Troubleshooting completo
-
-- **[MICROSERVICES_TESTING.md](./MICROSERVICES_TESTING.md)** - 🧪 Testes de microserviços
-  - Comandos para provar a independência dos serviços
-  - Testes de isolamento de banco de dados
-  - Verificação de comunicação assíncrona (RabbitMQ)
-  - Demonstração de escalabilidade horizontal
-  - Testes de resiliência a falhas
-  - Script completo de demonstração
-
-- **[API_TESTING_GUIDE.md](./API_TESTING_GUIDE.md)** - 🔌 Guia de testes de API
-  - Documentação de todos os endpoints
-  - Exemplos de requisições e respostas
-  - Comandos PowerShell, curl e Postman
-  - Testes de integração com frontend
-  - Scripts de teste automatizado
-
-- **[FOLDER_STRUCTURE.md](./FOLDER_STRUCTURE.md)** - 📁 Estrutura de pastas
-  - Organização completa do projeto
-  - Propósito de cada diretório
-  - Onde adicionar novos componentes
-  - Arquivos de configuração
-
-- **[POWERSHELL_SCRIPTS_GUIDE.md](./POWERSHELL_SCRIPTS_GUIDE.md)** - 🔧 Guia dos scripts
-  - Como usar `full-deploy.ps1`
-  - Como usar `clean-setup.ps1`
-  - Troubleshooting detalhado
-  - Comandos úteis
-
 ## 🏗️ Arquitetura
 
 A plataforma demonstra uma **arquitetura de microserviços completa e funcional**, com serviços independentes, comunicação síncrona e assíncrona, e infraestrutura distribuída.
@@ -74,9 +28,8 @@ A plataforma demonstra uma **arquitetura de microserviços completa e funcional*
 ✅ **Service Discovery**: Kubernetes DNS para localização automática de serviços  
 ✅ **Health Checks**: Monitoramento individual de cada serviço  
 ✅ **Horizontal Scaling**: Réplicas independentes com load balancing automático  
-✅ **Containerização**: Todos os componentes rodando em containers Docker  
+✅ **Containerização**: Todos os componentes rodando em containers Docker
 
-**Para arquitetura detalhada, consulte [ARCHITECTURE.md](./ARCHITECTURE.md)**
 
 ## 🚀 Tecnologias
 
@@ -153,8 +106,6 @@ O script `full-deploy.ps1` realiza automaticamente:
 
 **⏱️ Tempo total**: 10-20 minutos (primeira vez)
 
-**📖 Para entender o que acontece nos bastidores, consulte [DEPLOYMENT_GUIDE.md](./DEPLOYMENT_GUIDE.md)**
-
 ### 3. Verificar o Deploy
 
 ```powershell
@@ -174,8 +125,6 @@ curl http://distrischool.local/api/v1/professores
 
 O método recomendado é usar `full-deploy.ps1`, mas existem alternativas:
 
-- **Deploy com Ingress manual**: Ver [POWERSHELL_SCRIPTS_GUIDE.md](./POWERSHELL_SCRIPTS_GUIDE.md)
-- **Deploy com NodePort**: Consultar [DEPLOYMENT_GUIDE.md](./DEPLOYMENT_GUIDE.md)
 - **Desenvolvimento local**: Usar `docker-compose.yml` na raiz
 
 ## 📁 Estrutura do Projeto
@@ -201,8 +150,6 @@ distrischool-professor-tecadm-service/
 ├── 📄 docker-compose.yml            # Docker Compose para dev local
 └── 📄 Dockerfile                    # Professor Service Dockerfile
 ```
-
-**📖 Para estrutura detalhada, consulte [FOLDER_STRUCTURE.md](./FOLDER_STRUCTURE.md)**
 
 ## 🔌 Endpoints da API
 
@@ -260,8 +207,6 @@ kubectl scale deployment professor-tecadm-deployment --replicas=3  # 3 réplicas
 kubectl delete pod <nome-do-pod>  # Kubernetes recria automaticamente
 ```
 
-**📖 Para testes completos de microserviços, consulte [MICROSERVICES_TESTING.md](./MICROSERVICES_TESTING.md)**
-
 ### Testando APIs
 
 ```powershell
@@ -281,8 +226,6 @@ Invoke-RestMethod -Uri "http://distrischool.local/api/v1/professores" `
 # Listar professores
 Invoke-RestMethod -Uri "http://distrischool.local/api/v1/professores"
 ```
-
-**📖 Para exemplos completos de todas as APIs, consulte [API_TESTING_GUIDE.md](./API_TESTING_GUIDE.md)**
 
 ### Testes Unitários
 
@@ -369,7 +312,7 @@ O sistema usa eventos assíncronos para comunicação entre serviços:
 
 ### Routing Keys
 - `professor.created`, `professor.updated`, `professor.deleted`
-- `aluno.created`, `aluno.updated`, `aluno.deleted`  
+- `aluno.created`, `aluno.updated`, `aluno.deleted`
 - `user.created`, `user.updated`, `user.deleted`
 
 ### Exemplo de Uso
@@ -469,9 +412,6 @@ curl http://localhost:8082/api/v1/professores
 # Ver logs do API Gateway
 kubectl logs deployment/api-gateway-deployment
 ```
-
-**📖 Para troubleshooting detalhado, consulte [DEPLOYMENT_GUIDE.md](./DEPLOYMENT_GUIDE.md)**
-
 ## 🧹 Limpando o Ambiente
 
 Para remover completamente o ambiente:
