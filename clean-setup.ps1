@@ -1,4 +1,4 @@
-# ====================================
+﻿# ====================================
 # DistriSchool - Clean Setup Script
 # PowerShell Script to Clean Minikube Environment
 # ====================================
