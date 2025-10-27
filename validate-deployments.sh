@@ -10,7 +10,8 @@ echo "Deployment Configuration Validation Script"
 echo "=============================================="
 echo ""
 
-REPO_ROOT="/home/runner/work/distrischool-professor-tecadm-service/distrischool-professor-tecadm-service"
+# Detect repository root dynamically
+REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 VALIDATION_PASSED=true
 
 # Function to check if a value exists in a file
